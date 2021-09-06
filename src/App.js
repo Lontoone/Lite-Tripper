@@ -1,24 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import { ThemeProvider } from "@material-ui/core";
+import React from "react";
+import Header from "./Components/Header/Header";
+
+import webTheme from "./Hooks/WebTheme";
+//import theme from "./Hooks/WebTheme";
 
 function App() {
+  //console.log(webTheme.theme);
+  //const theme = WebTheme();
+  //console.log(WebTheme());
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={webTheme.theme}>
+      <Header />
+    </ThemeProvider>
   );
 }
 
