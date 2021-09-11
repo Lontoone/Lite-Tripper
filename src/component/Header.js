@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
-import webTheme from "../../Hooks/WebTheme";
+import webTheme from "../Hooks/WebTheme";
 
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -53,7 +53,6 @@ function Header() {
 
           {/* 用戶頭相 */}
           <Avatar>123</Avatar>
-
         </Container>
       </Toolbar>
     </AppBar>

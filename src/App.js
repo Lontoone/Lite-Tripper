@@ -1,8 +1,10 @@
 import { ThemeProvider } from "@material-ui/core";
 import React from "react";
-import Header from "./Components/Header/Header";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import webTheme from "./Hooks/WebTheme";
+import SignIn from "./pages/SignIn";
+import Layout from "./component/Layout";
 //import theme from "./Hooks/WebTheme";
 
 function App() {
@@ -11,7 +13,15 @@ function App() {
   //console.log(WebTheme());
   return (
     <ThemeProvider theme={webTheme.theme}>
-      <Header />
+      <Router>
+        <Layout>
+          <Switch>
+            <Route exact path="/">
+              <SignIn />
+            </Route>
+          </Switch>
+        </Layout>
+      </Router>
     </ThemeProvider>
   );
 }
