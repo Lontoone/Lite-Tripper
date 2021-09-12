@@ -53,13 +53,13 @@ function Home() {
             {/* 排序 */}
             <Grid item>
               <Paper>
-                <Container>456</Container>
+                <Container>排序....</Container>
               </Paper>
             </Grid>
 
             {/* 商品清單 */}
             <Grid item>
-              <Paper>789</Paper>
+              <Paper>商品內容...</Paper>
             </Grid>
           </Grid>
         </Grid>
