@@ -6,7 +6,7 @@ import Header from "./Components/Header";
 import webTheme from "./Hooks/WebTheme";
 import Home from "./Components/Home";
 import Layout from "./Components/Layout";
-import SignIn from "./Pages/SignIn"
+import SignIn from "./Pages/SignIn";
 //import theme from "./Hooks/WebTheme";
 
 function App() {
@@ -18,8 +18,11 @@ function App() {
       <Router>
         <Layout>
           <Switch>
-            <Route exact path="/">              
+            <Route exact path="/">
               <SignIn />
+              <Home />
+            </Route>
+            <Route exact path="/home">
               <Home />
             </Route>
           </Switch>
