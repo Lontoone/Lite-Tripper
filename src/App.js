@@ -4,7 +4,7 @@ import React from "react";
 import Header from "./Components/Header";
 
 import webTheme from "./Hooks/WebTheme";
-import Home from "./Components/Home";
+import Home from "./Pages/Home";
 import Layout from "./Components/Layout";
 import SignIn from "./Pages/SignIn";
 //import theme from "./Hooks/WebTheme";
@@ -19,11 +19,10 @@ function App() {
         <Layout>
           <Switch>
             <Route exact path="/">
-              <SignIn />
               <Home />
             </Route>
-            <Route exact path="/home">
-              <Home />
+            <Route exact path="/signIn">
+              <SignIn />
             </Route>
           </Switch>
         </Layout>

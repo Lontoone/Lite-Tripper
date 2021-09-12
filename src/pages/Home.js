@@ -13,8 +13,8 @@ import {
 import React from "react";
 
 import webTheme from "../Hooks/WebTheme";
-import CarouselImage from "./CarouselImage";
-import RegionSelect from "./RegionSelect";
+import CarouselImage from "../Components/CarouselImage";
+import RegionSelect from "../Components/RegionSelect";
 function Home() {
   return (
     <Container>
