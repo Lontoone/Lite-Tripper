@@ -1,10 +1,11 @@
-import { ThemeProvider } from "@material-ui/core";
-import React from "react";
+import { Container, ThemeProvider, Typography } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React from "react";
+import Header from "./Components/Header";
 
 import webTheme from "./Hooks/WebTheme";
-import SignIn from "./pages/SignIn";
-import Layout from "./component/Layout";
+import Home from "./Components/Home";
+import Layout from "./Components/Layout";
 //import theme from "./Hooks/WebTheme";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Switch>
             <Route exact path="/">
               <SignIn />
+              <Home />
             </Route>
           </Switch>
         </Layout>

@@ -10,30 +10,51 @@ const theme = createTheme({
   },
 });
 
-/*
-const useStyles = makeStyles((theme) => {
-  return {
-    ...theme,
-    header__logo: {
-      width: "100%",
-    },
-  };
-});*/
+const root = {
+  root: {
+    display: "flex",
+    flexDirection: "row",
+  },
+};
+const home = {
+  root: {
+    background: "#f9f9f9",
+    width: "100%",
+    padding: theme.spacing(3),
+  },
+  home__ad: {
+    height: "30vh",
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+  },
+  home__bodyContainer: {
+    display:"flex",
+    flexDirection:"row",   
+    
+  },
+  home__filterBox:{
+    flex:0.25,
+    paddingRight: theme.spacing(3),
+  }
+};
 
 const header = {
+  header__padding: theme.mixins.toolbar,
+
   header__logo: {
     width: "100px",
     margin: theme.spacing(1),
   },
   header__search: {
     display: "flex",
-    flex:1,
+    flex: 1,
     flexGrow: 1,
     margin: theme.spacing(1),
   },
   header__searchInput: {
-    height: "30px",    
-    flex:1,
+    height: "30px",
+    flex: 1,
     border: "none",
     borderRadius: "2px",
   },
@@ -47,7 +68,7 @@ const header = {
   },
   header__nav: {
     display: "flex",
-    flex:"0.1",
+    flex: "0.1",
     padding: theme.spacing(1),
   },
 };
@@ -56,4 +77,6 @@ const header = {
 export default {
   theme,
   header,
+  home,
+  root,
 };
