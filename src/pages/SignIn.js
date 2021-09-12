@@ -1,34 +1,119 @@
 import React from "react";
-import { Button, Container, makeStyles } from "@material-ui/core";
-import { firebase, auth } from "../utils/firebase";
+import {
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  makeStyles,
+  Paper,
+  Avatar,
+  Typography,
+} from "@material-ui/core";
+import { firebase, auth, firestore } from "../utils/firebase";
+import { useHistory } from "react-router";
 
-const useStyle = makeStyles((theme) => {
-  return {
-    page: {
-      background: "#FFB2B2",
-      padding: theme.spacing(3),
-    },
-  };
-});
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: "100vh",
+  },
+  image: {
+    backgroundImage: "url(https://source.unsplash.com/random)",
+    backgroundRepeat: "no-repeat",
+    backgroundColor:
+      theme.palette.type === "light"
+        ? theme.palette.grey[50]
+        : theme.palette.grey[900],
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  },
+  paper: {
+    margin: theme.spacing(8, 4),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
 function SignIn() {
-  const classes = useStyle();
-
-  //使用google授權的
-  const signInWithGoogle = async () => {
+  const classes = useStyles();
+  const History = useHistory();
+  //使用google授權
+  const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.useDeviceLanguage();
-    try {
-      await auth.signInWithPopup(provider);
-    } catch (error) {
-      console.error(error);
-    }
+    auth
+      .signInWithPopup(provider)
+      .then(async (result) => {
+        const user = result.user;
+        const docRef = firestore.collection("users").doc(user.uid);
+        await docRef.get().then((doc) => {
+          if (doc.exists) {
+            console.log("exist");
+            docRef.update({
+              id: user.uid,
+              name: user.displayName,
+              email: user.email,
+              photoURL: user.photoURL,
+            });
+          } else {
+            console.log("notexist");
+            docRef.set({
+              id: user.uid,
+              name: user.displayName,
+              email: user.email,
+              photoURL: user.photoURL,
+            });
+          }
+        });
+      })
+      .then(() => {
+        History.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
   return (
-    <Container align="center" className={classes.page}>
-      <Button onClick={signInWithGoogle} variant="contained" color="primary">
-        Sign in with Google
-      </Button>
-    </Container>
+    <Grid container component="main" className={classes.root}>
+      <CssBaseline />
+      <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <div className={classes.paper}>
+          <Avatar
+            className={classes.avatar}
+            src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
+          />
+          <Typography component="h1" variant="h5">
+            歡迎來到Lite-Tripper
+          </Typography>
+          <Button
+            onClick={signInWithGoogle}
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            startIcon={<img src="/GoogleLogo.png" />}
+          >
+            Sign In With Google
+          </Button>
+        </div>
+      </Grid>
+    </Grid>
   );
 }
 

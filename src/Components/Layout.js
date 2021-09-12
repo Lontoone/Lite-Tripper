@@ -7,7 +7,7 @@ const useStyle = makeStyles((theme) => {
     page: {
       background: "#f9f9f9",
       width: "100%",
-      padding: theme.spacing(3),
+      paddingTop: theme.spacing(3),
     },
     toolbar: theme.mixins.toolbar,
   };
