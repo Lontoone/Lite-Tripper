@@ -67,6 +67,7 @@ function SignIn() {
               name: user.displayName,
               email: user.email,
               photoURL: user.photoURL,
+              introduction: "暫無介紹",
             });
           } else {
             console.log("notexist");
@@ -75,6 +76,7 @@ function SignIn() {
               name: user.displayName,
               email: user.email,
               photoURL: user.photoURL,
+              introduction: "暫無介紹",
             });
           }
         });

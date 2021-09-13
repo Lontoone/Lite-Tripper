@@ -13,9 +13,10 @@ import {
   Tabs,
   Box,
 } from "@material-ui/core";
-import React from "react";
-import { useParams } from "react-router";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import SignOutBtn from "../Components/SignoutBtn";
+import { firestore } from "../utils/firebase";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -41,16 +42,31 @@ function TabPanel({ children, value, index }) {
 
 //個人葉面
 function Profile() {
+  const { uid } = useParams();
+  const History = useHistory();
   const [value, setValue] = React.useState(0);
-  const displayName = "多估你而拉斯";
+  const [userData, setUserData] = useState({
+    introduction: "暫無介紹",
+    id: "",
+    email: "",
+    photoURL: "",
+    name: "",
+  });
+  useEffect(async () => {
+    const docRef = firestore.collection("users").doc(uid);
+    await docRef.get().then((doc) => {
+      if (doc.exists) {
+        console.log("success");
+        setUserData(doc.data());
+      } else {
+        //發現找不到該用戶重導向到404頁
+        History.push("/404");
+      }
+    });
+    console.log(userData);
+  }, []);
   const message =
     "japofjsdofjsopafoasjdfojasof asojfpasodjfoasj aospdfjpaosdjf osajfapsjfasjfpojapdfjp jasfopajsdpfojasodjf pjsapjfpoajsopfajspdfj opja";
-  const email = "pasjdpfjasdfj@gmail.com";
-  let { uid } = useParams();
-  //TODO: 透過傳入的uid去抓使用者資料
-  {
-    /*<p>ID: {uid}</p>;*/
-  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -63,17 +79,17 @@ function Profile() {
         {/*個人大頭貼 */}
         <Grid item xs={12} sm={4}>
           <Container>
-            <Avatar className={classes.Avatar} />
+            <Avatar src={userData.photoURL} className={classes.Avatar} />
           </Container>
         </Grid>
         {/*個人介紹兼操作 */}
         <Grid item container xs={12} sm={8}>
           {/*個人資料 */}
-          <Grid xs={8} container wrap="nowrap" spacing={2}>
+          <Grid item xs={8} container wrap="nowrap" spacing={2}>
             <Grid item>
-              <Typography variant="h5">{displayName}</Typography>
-              <Typography variant="p" nowarp>
-                {email}
+              <Typography variant="h5">{userData.name}</Typography>
+              <Typography variant="subtitle1" noWrap>
+                {userData.email}
               </Typography>
             </Grid>
           </Grid>
@@ -89,11 +105,11 @@ function Profile() {
             </ButtonGroup>
           </Grid>
           {/*自我介紹 */}
-          <Grid xs={12} item spacing={2}>
+          <Grid xs={12} item>
             <Card>
               <CardContent>
                 <Typography variant="body2" color="textSecondary">
-                  {message}
+                  {userData.introduction}
                 </Typography>
               </CardContent>
             </Card>

@@ -9,6 +9,7 @@ import SignIn from "./Pages/SignIn";
 import Profile from "./Pages/Profile";
 import { auth } from "./utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import NoFoundPage from "./pages/NoFoundPage";
 //import theme from "./Hooks/WebTheme";
 
 function App() {
@@ -36,6 +37,10 @@ function App() {
             <Layout>
               <Profile />
             </Layout>
+          </Route>
+          {/*404 */}
+          <Route exact path="/404">
+            <NoFoundPage />
           </Route>
         </Switch>
       </Router>
