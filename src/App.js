@@ -2,13 +2,12 @@ import { Container, ThemeProvider, Typography } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import React from "react";
 
-import webTheme,{theme} from "./Hooks/WebTheme";
-import Home from "./Pages/Home";
+import webTheme, { theme } from "./Hooks/WebTheme";
+import Home from "./pages/Home";
 import Layout from "./Components/Layout";
-import SignIn from "./Pages/SignIn";
-import Profile from "./Pages/Profile";
+import SignIn from "./pages/SignIn";
+import Profile from "./pages/Profile";
 import { auth } from "./utils/firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
 import NoFoundPage from "./pages/NoFoundPage";
 //import theme from "./Hooks/WebTheme";
 
@@ -16,7 +15,6 @@ function App() {
   //console.log(webTheme.theme);
   //const theme = WebTheme();
   //console.log(WebTheme());
-  const [user] = useAuthState(auth);
 
   return (
     <ThemeProvider theme={theme}>

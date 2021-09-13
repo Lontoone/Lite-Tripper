@@ -16,7 +16,10 @@ import {
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import SignOutBtn from "../Components/SignoutBtn";
-import { firestore } from "../utils/firebase";
+import { firestore, auth } from "../utils/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import ShopTab from "../Components/ShopTab";
+import MessageBoard from "../Components/MessageBoard";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -26,9 +29,6 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(20),
     height: theme.spacing(20),
     margin: theme.spacing(1),
-  },
-  colorblock: {
-    backgroundColor: "#DC9FB4",
   },
 }));
 
@@ -42,36 +42,57 @@ function TabPanel({ children, value, index }) {
 
 //個人葉面
 function Profile() {
+  //style
+  const classes = useStyles();
+  //授權hook
+  const [user, authLoading, error] = useAuthState(auth);
+  //拉取資料的載入狀態
+  const [loading, setLoading] = useState(true);
+  //網址參數
   const { uid } = useParams();
   const History = useHistory();
+  //用來作為tab換頁用
   const [value, setValue] = React.useState(0);
+  //用來儲存使用者資料
   const [userData, setUserData] = useState({
-    introduction: "暫無介紹",
+    introduction: "",
     id: "",
     email: "",
     photoURL: "",
     name: "",
   });
-  useEffect(async () => {
+
+  const getUserData = async () => {
     const docRef = firestore.collection("users").doc(uid);
-    await docRef.get().then((doc) => {
-      if (doc.exists) {
-        console.log("success");
-        setUserData(doc.data());
-      } else {
-        //發現找不到該用戶重導向到404頁
-        History.push("/404");
-      }
-    });
-    console.log(userData);
+    await docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          setUserData(doc.data());
+        } else {
+          //發現找不到該用戶重導向到404頁
+          History.push("/404");
+        }
+      })
+      .then(() => {
+        setLoading(false);
+      });
+  };
+  useEffect(() => {
+    getUserData();
   }, []);
-  const message =
-    "japofjsdofjsopafoasjdfojasof asojfpasodjfoasj aospdfjpaosdjf osajfapsjfasjfpojapdfjp jasfopajsdpfojasodjf pjsapjfpoajsopfajspdfj opja";
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const classes = useStyles();
+
+  if (authLoading && loading) {
+    return (
+      <div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
   return (
     <Container maxWidth="md" justify="contant">
       {/*上半部 */}
@@ -95,13 +116,21 @@ function Profile() {
           </Grid>
           {/*操作按鈕 */}
           <Grid xs={4} item>
-            <ButtonGroup
-              orientation="vertical"
-              variant="contained"
-              color="primary"
-            >
-              <Button>修改資料</Button>
-              <SignOutBtn />
+            <ButtonGroup variant="contained" color="primary">
+              {user?.uid == uid ? (
+                <>
+                  <Button variant="contained" color="primary">
+                    修改資料
+                  </Button>
+                  <SignOutBtn />
+                </>
+              ) : (
+                <>
+                  <Button variant="contained" color="primary">
+                    傳送訊息
+                  </Button>
+                </>
+              )}
             </ButtonGroup>
           </Grid>
           {/*自我介紹 */}
@@ -125,14 +154,14 @@ function Profile() {
           textColor="primary"
           centered
         >
-          <Tab label="Item One" />
-          <Tab label="Item Two" />
+          <Tab label="Shop" />
+          <Tab label="Comment" />
         </Tabs>
         <TabPanel value={value} index={0}>
-          Item One
+          <ShopTab />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Item Two
+          <MessageBoard />
         </TabPanel>
       </Paper>
     </Container>

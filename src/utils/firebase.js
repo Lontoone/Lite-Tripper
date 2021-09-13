@@ -2,6 +2,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
+import "firebase/compat/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCdWFxIUbjchiqeNO3L8LtNp8JyMfCatKI",
@@ -18,4 +19,20 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
-export { firebase, auth, firestore };
+//上傳圖片到storage並且回傳promise物件，可以取得圖片網址
+function UploadImg(path, fileName, file) {
+  const fileRef = firebase.storage().ref(path + "/" + fileName);
+  const metadata = {
+    contentType: file.type,
+  };
+  const result = Promise.resolve(
+    fileRef.put(file, metadata).then(() => {
+      return fileRef.getDownloadURL().then((imgURL) => {
+        return imgURL;
+      });
+    })
+  );
+  return result;
+}
+
+export { firebase, auth, firestore, UploadImg };
