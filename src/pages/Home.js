@@ -16,35 +16,52 @@ import webTheme from "../Hooks/WebTheme";
 import CarouselImage from "../Components/CarouselImage";
 import RegionSelect from "../Components/RegionSelect";
 function Home() {
+  const classes = webTheme();
+
   return (
     <Container>
-      <Grid container spacing={3} style={webTheme.home.root}>
+      <Grid
+        container
+        spacing={3}
+        className={classes.home__container}
+        //style={webTheme.home.root}
+      >
         {/* 廣告區 */}
         <Grid item xs={12}>
-          <Paper style={webTheme.home.home__ad}>
+          <Paper
+            className={classes.home__ad}
+            //style={webTheme.home.home__ad}
+          >
             {/* TODO: 廣告幻燈片 */}
             <img src="https://p2.bahamut.com.tw/B/2KU/38/3c661803ce9a8b1918024d02f21di7e5.JPG" />
           </Paper>
         </Grid>
 
         {/* 商品內容版 */}
-        <Grid container style={webTheme.home.home__bodyContainer}>
+        <Grid
+          item
+          className={classes.home__bodyContainer}
+          //style={webTheme.home.home__bodyContainer}
+        >
           {/* 搜尋篩選調整 */}
-          <Grid item style={webTheme.home.home__filterBox}>
-            <Paper>
-              <form>
-                <List
-                  component="nav"
-                  aria-labelledby="nested-list-subheader"
-                  subheader={
-                    <ListSubheader component="div" id="nested-list-subheader">
-                      商品篩選
-                    </ListSubheader>
-                  }
-                >
-                  <RegionSelect></RegionSelect>
-                </List>
-              </form>
+          <Grid
+            item
+            className={classes.home__filterBox}
+            xs={12}
+            //style={webTheme.home.home__filterBox}
+          >
+            <Paper component="form">
+              <List
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    商品篩選
+                  </ListSubheader>
+                }
+              >
+                <RegionSelect></RegionSelect>
+              </List>
             </Paper>
           </Grid>
 

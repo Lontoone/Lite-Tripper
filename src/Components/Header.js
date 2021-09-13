@@ -4,56 +4,65 @@ import {
   Avatar,
   Button,
   Container,
+  IconButton,
+  InputBase,
+  Paper,
   TextField,
   Toolbar,
   Typography,
 } from "@material-ui/core";
+
 import ChatIcon from "@material-ui/icons/Chat";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import webTheme from "../Hooks/WebTheme";
 
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
-
 function Header() {
+  const classes = webTheme();
+
   return (
     <AppBar>
-      <Toolbar>
+      <Toolbar className={classes.header__container}>
         {/* LOGO 圖片 */}
         <img
-          style={webTheme.header.header__logo}
+          className={classes.header__logo}
           src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
         ></img>
 
         {/* 搜尋 */}
-        <Container style={webTheme.header.header__search}>
-          <input
-            style={webTheme.header.header__searchInput}
+        <Paper component="form" className={classes.header__search}>
+          <InputBase
+            className={classes.header__searchInput}
+            placeholder="Search"
             type="text"
-          ></input>
-          <Button
-            style={webTheme.header.header__searchIcon}
+            fullWidth
+          ></InputBase>
+          <IconButton
+            type="submit"
             variant="contained"
-            color="secondary"
+            className={classes.header__searchIcon}
+            aria-label="search"
           >
             <SearchIcon />
-          </Button>
-        </Container>
-
+          </IconButton>
+        </Paper>
         {/* 功能組 */}
-        <Container style={webTheme.header.header__nav}>
+        <div className={classes.header__nav}>
           {/* 聊天室 */}
-          <Button>
+          <IconButton>
             <ChatIcon />
-          </Button>
+          </IconButton>
 
           {/* 購物車 */}
-          <Button>
+          <IconButton>
             <LocalMallIcon />
-          </Button>
-
+          </IconButton>
           {/* 用戶頭相 */}
-          <Avatar>123</Avatar>
-        </Container>
+          <IconButton edge="end">
+            <Avatar>123</Avatar>
+          </IconButton>
+        </div>
       </Toolbar>
     </AppBar>
   );
