@@ -36,8 +36,8 @@ function App() {
               <Profile />
             </Layout>
           </Route>
-          {/*404 */}
-          <Route exact path="/404">
+          {/*若輸入其他網址會導入noFound頁面 */}
+          <Route path="/*">
             <NoFoundPage />
           </Route>
         </Switch>
