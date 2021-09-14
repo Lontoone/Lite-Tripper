@@ -80,21 +80,17 @@ function Profile() {
   };
   useEffect(() => {
     getUserData();
-  }, []);
+  }, [uid]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   if (authLoading && loading) {
-    return (
-      <div>
-        <p>Loading...</p>
-      </div>
-    );
+    return <div></div>;
   }
   return (
-    <Container maxWidth="md" justify="contant">
+    <Container maxWidth="md">
       {/*上半部 */}
       <Grid container>
         {/*個人大頭貼 */}
@@ -116,22 +112,20 @@ function Profile() {
           </Grid>
           {/*操作按鈕 */}
           <Grid xs={4} item>
-            <ButtonGroup variant="contained" color="primary">
-              {user?.uid == uid ? (
-                <>
-                  <Button variant="contained" color="primary">
-                    修改資料
-                  </Button>
-                  <SignOutBtn />
-                </>
-              ) : (
-                <>
-                  <Button variant="contained" color="primary">
-                    傳送訊息
-                  </Button>
-                </>
-              )}
-            </ButtonGroup>
+            {user?.uid == uid ? (
+              <>
+                <Button variant="contained" color="primary">
+                  修改資料
+                </Button>
+                <SignOutBtn />
+              </>
+            ) : (
+              <>
+                <Button variant="contained" color="primary">
+                  傳送訊息
+                </Button>
+              </>
+            )}
           </Grid>
           {/*自我介紹 */}
           <Grid xs={12} item>

@@ -12,21 +12,32 @@ import {
   Typography,
 } from "@material-ui/core";
 
+import { auth } from "../utils/firebase";
 import ChatIcon from "@material-ui/icons/Chat";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import webTheme from "../Hooks/WebTheme";
-
+import { useAuthState } from "react-firebase-hooks/auth";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
+import { useHistory } from "react-router";
+
 function Header() {
   const classes = webTheme();
-
+  //授權hook
+  const [user, authLoading, error] = useAuthState(auth);
+  const history = useHistory();
+  if (authLoading) {
+    return <div></div>;
+  }
   return (
     <AppBar>
       <Toolbar className={classes.header__container}>
         {/* LOGO 圖片 */}
         <img
           className={classes.header__logo}
+          onClick={() => {
+            history.push("/");
+          }}
           src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
         ></img>
 
@@ -60,7 +71,12 @@ function Header() {
           </IconButton>
           {/* 用戶頭相 */}
           <IconButton edge="end">
-            <Avatar>123</Avatar>
+            <Avatar
+              onClick={() => {
+                history.push("/profile/" + user?.uid);
+              }}
+              src={user?.photoURL}
+            ></Avatar>
           </IconButton>
         </div>
       </Toolbar>
