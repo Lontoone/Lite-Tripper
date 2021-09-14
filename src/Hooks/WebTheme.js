@@ -18,9 +18,9 @@ const root = {
 };
 const home = {
   home__container: {
-    background: "#f9f9f9",
+    //background: "#f9f9f9",
     width: "100%",
-    //padding: theme.spacing(3),
+    //padding: theme.spacing(1),
   },
   home__ad: {
     height: "30vh",
@@ -31,21 +31,31 @@ const home = {
   home__bodyContainer: {
     display: "flex",
     flexDirection: "row",
-    width:"95vw",
+    width: "100vw",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
   },
   home__filterBox: {
-    width:"35%",    
-    paddingRight: theme.spacing(3),
+    width: "35%",
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+  home__productList: {
+    margin: 2,
+    paddingTop: 2,
+    paddingBottom: 2,
   },
 };
 
 const header = {
   header__padding: theme.mixins.toolbar,
-  header__container:{
+  header__container: {
     //width:"90vw",
-    padding:0,
-    margin: theme.spacing(0,1),
-
+    padding: 0,
+    margin: theme.spacing(0, 1),
   },
   header__logo: {
     width: "100px",
@@ -97,29 +107,145 @@ const header = {
 
   header__nav: {
     display: "flex",
-    flex:1,
+    flex: 1,
     //flexGrow:0,
     //flexShrink:1,
     padding: theme.spacing(0),
-    
-    justifyContent: "flex-end",    
-    [theme.breakpoints.down("xs")]: {
+
+    justifyContent: "flex-end",
+    [theme.breakpoints.down("sm")]: {
       //paddingRight:"50px",
     },
-    
   },
 
   header__avatar: {},
 };
 
-const regionSelect={
-  
-}
+const regionSelect = {
+  regionSelect__container: {
+    flex: 1,
+  },
+};
+
+const productCard = {
+  productCard__papaer: {
+    minWidth: 400,
+    display: "flex",
+    flexGrow: 1,
+    //padding: theme.spacing(2),
+    //margin: theme.spacing(2),
+    maxHeight: 256,
+    [theme.breakpoints.down("sm")]: {
+      //maxHeight: 128,
+      maxHeight: "25vh",
+      minWidth: 300,
+    },
+
+    //margin: "auto",
+  },
+  productCard__container: {
+    display: "flex",
+    width: "100%",
+    alignItems: "center",
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+      //maxWidth: 300,
+      minWidth: 700,
+    },
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      maxWidth: 300,
+      //minWidth: 700,
+    },
+  },
+  productCard__media: {
+    width: 200,
+    height: 200,
+    margin:theme.spacing(0,1),
+    padding:theme.spacing(0),
+    overflow: "hidden",
+    [theme.breakpoints.down("sm")]: {
+      width: 100,
+      height: 100,
+    },
+  },
+  productCard__img: {
+    margin: "auto",
+    display: "block",
+    //maxWidth: "100%",
+    maxHeight: "100%",
+    objectFit: "cover",
+  },
+
+  productCard__infoContainer: {
+    display: "flex",
+    flexDirection: "column",
+    marginLeft: theme.spacing(1),
+  },
+  productCard__subInfoContainer: {
+    display: "flex",
+    flexDirection: "row",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+  },
+  productCard__subInfoLeft: {
+    minWidth: 128,
+    display: "flex",
+    flexDirection: "row",
+    //justifyContent:"center",
+    alignItems: "baseline",
+    padding: 0,
+    //flexGrow: 2,
+  },
+  productCard__subInfoButton: {
+    //color:"#24E5B8",
+    display: "flex",
+    flexDirection: "row",
+    //justifyContent:"space-between",
+    alignItems: "center",
+  },
+
+  productCard__titleText: {
+    maxWidth: "40vw",
+    display: "-webkit-box",
+    "-webkit-box-orient": "vertical",
+    "-webkit-line-clamp": 2,
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      maxWidth: 150,
+      fontSize: 16,
+    },
+  },
+
+  productCard__infoText: {
+    maxWidth: "40vw",
+    display: "-webkit-box",
+    "-webkit-box-orient": "vertical",
+    "-webkit-line-clamp": 5,
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    lineHeight: "1.8em",
+    fontSize: 14,
+    "letter-spacing": "0.3em",
+
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      //maxWidth: 150,
+      fontSize: 12,
+      "-webkit-line-clamp": 2,
+    },
+  },
+};
 
 const useStyles = makeStyles({
   ...home,
   ...header,
   ...regionSelect,
+  ...productCard,
 });
 
 function UseClasses() {
