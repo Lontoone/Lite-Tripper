@@ -161,7 +161,7 @@ function Profile() {
           <ShopTab />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <MessageBoard />
+          <MessageBoard uid={uid} />
         </TabPanel>
       </Paper>
     </Container>

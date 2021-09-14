@@ -61,16 +61,15 @@ function SignIn() {
         const docRef = firestore.collection("users").doc(user.uid);
         await docRef.get().then((doc) => {
           if (doc.exists) {
-            console.log("exist");
-            docRef.update({
-              id: user.uid,
-              name: user.displayName,
-              email: user.email,
-              photoURL: user.photoURL,
-              introduction: "暫無介紹",
-            });
+            // docRef.update({
+            //   id: user.uid,
+            //   name: user.displayName,
+            //   email: user.email,
+            //   photoURL: user.photoURL,
+            //   introduction: "暫無介紹",
+            // });
+            History.push("/");
           } else {
-            console.log("notexist");
             docRef.set({
               id: user.uid,
               name: user.displayName,
@@ -78,11 +77,9 @@ function SignIn() {
               photoURL: user.photoURL,
               introduction: "暫無介紹",
             });
+            History.push("/ProfileEdit/" + user.uid);
           }
         });
-      })
-      .then(() => {
-        History.push("/");
       })
       .catch((err) => {
         console.log(err);

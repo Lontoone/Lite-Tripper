@@ -1,14 +1,15 @@
-import { Container, ThemeProvider, Typography } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import React from "react";
 
-import webTheme, { theme } from "./Hooks/WebTheme";
-import Home from "./Pages/Home";
+import { theme } from "./Hooks/WebTheme";
+import Home from "./pages/Home";
 import Layout from "./Components/Layout";
-import SignIn from "./Pages/SignIn";
-import Profile from "./Pages/Profile";
-import { auth } from "./utils/firebase";
-import NoFoundPage from "./Pages/NoFoundPage";
+import SignIn from "./pages/SignIn";
+import Profile from "./pages/Profile";
+import NoFoundPage from "./pages/NoFoundPage";
+import Chat from "./pages/Chat";
+import ProfileEdit from "./pages/ProfileEdit";
 //import theme from "./Hooks/WebTheme";
 
 function App() {
@@ -34,6 +35,18 @@ function App() {
           <Route exact path="/Profile/:uid">
             <Layout>
               <Profile />
+            </Layout>
+          </Route>
+          {/*聊天室*/}
+          <Route exact path="/Chat/">
+            <Layout>
+              <Chat />
+            </Layout>
+          </Route>
+          {/*聊天室*/}
+          <Route exact path="/ProfileEdit/:uid">
+            <Layout>
+              <ProfileEdit />
             </Layout>
           </Route>
           {/*若輸入其他網址會導入noFound頁面 */}
