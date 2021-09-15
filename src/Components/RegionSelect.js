@@ -5,8 +5,20 @@ import React, { useState, useEffect } from "react";
 
 import webTheme from "../Hooks/WebTheme";
 import { ContactSupport } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/styles";
 
-function fetchRegionData() {}
+const useStyles = makeStyles((theme) => ({
+  field: {
+    width: 80,
+  },
+  title: {
+    paddingLeft: 0,
+  },
+
+  item: {
+    padding: theme.spacing(0, 2),
+  },
+}));
 
 function RegionSelect() {
   //城市資料集 https://data.gov.tw/dataset/101905
@@ -15,7 +27,9 @@ function RegionSelect() {
   //區域使用資料集 https://data.gov.tw/dataset/102013
   const [townList, setTownList] = useState([]);
   const [selectedTown, setSelectedTown] = useState("A01");
-  const classes = webTheme();
+  //const classes = webTheme();
+
+  const classes = useStyles();
 
   useEffect(() => {
     var XMLParser = require("react-xml-parser");
@@ -42,18 +56,20 @@ function RegionSelect() {
   }, [selectedCounty]);
 
   return (
-    <ListItem>
-
-      <ListSubheader component="div" id="nested-list-subheader">
+    <ListItem className={classes.item}>
+      <ListSubheader
+        className={classes.title}
+        component="div"
+        id="nested-list-subheader"
+      >
         城市
       </ListSubheader>
-      <Select>
-        {/**TODO: https://material-ui.com/zh/components/selects/ */}
+      <Select name="county" className={classes.field}>
         {countyList.map((data) => (
-          <MenuItem 
+          <MenuItem
             value={data.children[0].value}
             //onClick={setSelectedCounty(data.children[0].value)}
-            onClick={()=>setSelectedCounty(data.children[0].value)}
+            onClick={() => setSelectedCounty(data.children[0].value)}
           >
             {data.children[1].value}
           </MenuItem>
@@ -63,8 +79,7 @@ function RegionSelect() {
       <ListSubheader component="div" id="nested-list-subheader">
         區域
       </ListSubheader>
-      <Select>
-        {/**TODO: https://material-ui.com/zh/components/selects/ */}
+      <Select name="town" className={classes.field}>
         {townList.map((data) => (
           <MenuItem value={data.children[0].value}>
             {data.children[1].value}

@@ -14,13 +14,13 @@ import React from "react";
 
 import webTheme from "../Hooks/WebTheme";
 import CarouselImage from "../Components/CarouselImage";
-import RegionSelect from "../Components/RegionSelect";
 import ProductCard from "../Components/ProductCard";
+import ProductFilter from "../Components/ProductFilter";
 function Home() {
   const classes = webTheme();
 
   return (
-    <Container>
+    <div>
       <Grid
         container
         spacing={3}
@@ -53,21 +53,8 @@ function Home() {
             lg={3}
             //style={webTheme.home.home__filterBox}
           >
-            <Paper component="form">
-              <List
-                component="nav"
-                aria-labelledby="nested-list-subheader"
-                subheader={
-                  <ListSubheader component="div" id="nested-list-subheader">
-                    商品篩選
-                  </ListSubheader>
-                }
-              >
-                <RegionSelect
-                  className={classes.regionSelect__container}
-                ></RegionSelect>
-              </List>
-            </Paper>
+            {/* 商品篩選 */}
+            <ProductFilter />
           </Grid>
 
           {/* 商品區 */}
@@ -82,7 +69,7 @@ function Home() {
             {/* 商品清單 */}
             <Grid item xs={12} sm={12} lg={12}>
               <Paper className={classes.home__productList} elevation={0}>
-                 {/* 商品Card */}
+                {/* 商品Card */}
                 <ProductCard
                   pid="1"
                   title="一中街一日遊"
@@ -99,7 +86,7 @@ function Home() {
           </Grid>
         </Grid>
       </Grid>
-    </Container>
+    </div>
   );
 }
 

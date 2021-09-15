@@ -38,7 +38,7 @@ function ProductCard({
       variant="Outlined"
       color="primary"
     >
-      <Paper className={classes.productCard__papaer}>
+      <Card className={classes.productCard__papaer}>
         <Grid container xs={12} className={classes.productCard__container}>
           {/* 預覽圖片 */}
           <Grid item className={classes.productCard__mediaContainer} >
@@ -52,13 +52,13 @@ function ProductCard({
             </ButtonBase>
             <Grid item container className={classes.productCard__subInfoButton}>
               {/* favorites */}
-              <Grid item xs={2}>
+              <Grid item>
                 <IconButton aria-label="add to favorites">
                   <FavoriteBorderTwoToneIcon fontSize="small" />
                 </IconButton>
               </Grid>
               {/* favorites */}
-              <Grid item xs={2}>
+              <Grid item>
                 <IconButton aria-label="share">
                   <ShareTwoToneIcon fontSize="small" />
                 </IconButton>
@@ -143,7 +143,7 @@ function ProductCard({
             </Grid>
           </Grid>
         </Grid>
-      </Paper>
+      </Card>
     </Button>
   );
 }

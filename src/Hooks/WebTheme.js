@@ -19,11 +19,14 @@ const root = {
 const home = {
   home__container: {
     //background: "#f9f9f9",
-    width: "100%",
+    width: "95%",
+    margin:"0 auto",
     //padding: theme.spacing(1),
   },
   home__ad: {
     height: "30vh",
+    maxWidth:1280,
+    margin:"0 auto",
     textAlign: "center",
     display: "flex",
     justifyContent: "center",
@@ -37,7 +40,7 @@ const home = {
     },
   },
   home__filterBox: {
-    width: "35%",
+    width: "30%",
     marginRight: theme.spacing(2),
     [theme.breakpoints.down("sm")]: {
       display: "none",
@@ -121,11 +124,6 @@ const header = {
   header__avatar: {},
 };
 
-const regionSelect = {
-  regionSelect__container: {
-    flex: 1,
-  },
-};
 
 const productCard = {
   productCard__papaer: {
@@ -170,7 +168,7 @@ const productCard = {
     overflow: "hidden",
     borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
-      margin: theme.spacing(2),
+      //margin: theme.spacing(2),
       width: 100,
       height: 100,
     },
@@ -257,7 +255,6 @@ const productCard = {
 const useStyles = makeStyles({
   ...home,
   ...header,
-  ...regionSelect,
   ...productCard,
 });
 
