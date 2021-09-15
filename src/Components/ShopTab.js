@@ -45,7 +45,7 @@ function ShopTab({ uid }) {
   return (
     <List>
       {products.map((product) => (
-        <ListItem divider key={product.pid} style={{display:"flex",alignItems: "center"}}>
+        <ListItem divider key={product.pid}>
           <div style={{width:"100%"}}>
             <ProductCard
               pid={product.pid}
