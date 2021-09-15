@@ -37,6 +37,7 @@ function ProductCard({
       to={"/product/" + pid}
       variant="Outlined"
       color="primary"
+      style={{width:"100%"}}
     >
       <Card className={classes.productCard__papaer}>
         <Grid container xs={12} className={classes.productCard__container}>

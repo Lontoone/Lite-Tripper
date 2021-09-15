@@ -129,16 +129,20 @@ const productCard = {
   productCard__papaer: {
     minWidth: 400,
     display: "flex",
+    flex:1,
     flexGrow: 1,
+    
     //padding: theme.spacing(2),
     //margin: theme.spacing(2),
     maxHeight: 256,
     [theme.breakpoints.down("sm")]: {
       maxHeight: "25vh",
-      //minWidth: 300,
-      minWidth: "85vw",
+      maxWidth: "85vw",      
     },
-
+    [theme.breakpoints.down("xs")]: {      
+      minWidth: 10, 
+      maxHeight: "60vh",     
+    },
     //margin: "auto",
   },
   productCard__container: {
@@ -147,13 +151,15 @@ const productCard = {
     alignItems: "center",
     [theme.breakpoints.up("sm")]: {
       flexDirection: "row",
-      //maxWidth: 300,
-      minWidth: 700,
+      minWidth: 500,
     },
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
-      maxWidth: 300,
-      //minWidth: 700,
+      minWidth: 300,
+    },    
+
+    [theme.breakpoints.down("xs")]: {      
+      flexDirection: "row",     
     },
   },
   productCard__mediaContainer: {
@@ -171,6 +177,11 @@ const productCard = {
       //margin: theme.spacing(2),
       width: 100,
       height: 100,
+    },
+       
+    [theme.breakpoints.down("xs")]: {      
+      width: "50vw",
+      height: "50vw",   
     },
   },
   productCard__img: {
@@ -201,7 +212,7 @@ const productCard = {
     alignItems: "baseline",
     "align-self":"baseline",
     padding: 0,
-    //flexGrow: 2,
+       
   },
   productCard__subInfoButton: {
     //color:"#24E5B8",
@@ -224,6 +235,10 @@ const productCard = {
       flexDirection: "column",
       maxWidth: 150,
       fontSize: 16,
+    },
+    
+    [theme.breakpoints.down("xs")]: {      
+      minWidth:"50vw"
     },
   },
 

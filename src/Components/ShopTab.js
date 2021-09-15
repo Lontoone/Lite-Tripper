@@ -1,4 +1,4 @@
-import { List, ListItem, Container } from "@material-ui/core";
+import { List, ListItem, Container, Card, Grid } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 
@@ -45,8 +45,8 @@ function ShopTab({ uid }) {
   return (
     <List>
       {products.map((product) => (
-        <ListItem divider key={product.pid}>
-          <Container>
+        <ListItem divider key={product.pid} style={{display:"flex",alignItems: "center"}}>
+          <div style={{width:"100%"}}>
             <ProductCard
               pid={product.pid}
               title={product.title}
@@ -55,9 +55,9 @@ function ShopTab({ uid }) {
               rating={product.rating}
               price={product.price}
               discribe={product.discribe}
-              thumbnail={product.thumbnail}
+              thumbnail={product.thumbnail}              
             />
-          </Container>
+          </div>
         </ListItem>
       ))}
     </List>
