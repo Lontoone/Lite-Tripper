@@ -53,7 +53,6 @@ function App() {
           <Route path="/*">
             <NoFoundPage />
           </Route>
-
         </Switch>
       </Router>
     </ThemeProvider>

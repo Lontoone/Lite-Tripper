@@ -70,13 +70,13 @@ function Header() {
             <LocalMallIcon />
           </IconButton>
           {/* 用戶頭相 */}
-          <IconButton edge="end">
-            <Avatar
-              onClick={() => {
-                history.push("/profile/" + user?.uid);
-              }}
-              src={user?.photoURL}
-            ></Avatar>
+          <IconButton
+            onClick={() => {
+              history.push("/profile/" + user?.uid);
+            }}
+            edge="end"
+          >
+            <Avatar src={user?.photoURL}></Avatar>
           </IconButton>
         </div>
       </Toolbar>
