@@ -1,6 +1,5 @@
 import { List, ListItem, Container } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import MessageSubmit from "./MessageSubmit";
 import ProductCard from "./ProductCard";
 
 function ShopTab({ uid }) {
@@ -18,7 +17,7 @@ function ShopTab({ uid }) {
         "https://p2.bahamut.com.tw/B/2KU/09/497beea0399f4826c9560024091dk9l5.JPG",
     },
     {
-      pid: "1",
+      pid: "2",
       title: "一中街一日遊",
       county: "台中市",
       town: "北區",
@@ -30,7 +29,7 @@ function ShopTab({ uid }) {
         "https://p2.bahamut.com.tw/B/2KU/09/497beea0399f4826c9560024091dk9l5.JPG",
     },
     {
-      pid: "1",
+      pid: "3",
       title: "一中街一日遊",
       county: "台中市",
       town: "北區",

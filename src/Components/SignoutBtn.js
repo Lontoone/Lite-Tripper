@@ -8,6 +8,7 @@ function SignOutBtn() {
   const logout = () => {
     auth.signOut().then(() => {
       History.push("/");
+      return;
     });
   };
   return (

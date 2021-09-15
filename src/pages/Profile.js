@@ -13,13 +13,16 @@ import {
   Tabs,
   Box,
 } from "@material-ui/core";
+//react
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import SignOutBtn from "../Components/SignoutBtn";
+//firebase
 import { firestore, auth } from "../utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+//page
 import ShopTab from "../Components/ShopTab";
-import MessageBoard from "../Components/MessageBoard";
+import MessageBoard from "../Components/MessageBoard/MessageBoard";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -152,7 +155,7 @@ function Profile() {
           <Tab label="Comment" />
         </Tabs>
         <TabPanel value={value} index={0}>
-          <ShopTab />
+          <ShopTab uid={uid} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <MessageBoard uid={uid} />

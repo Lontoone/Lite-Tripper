@@ -4,17 +4,9 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
-import {
-  FormControl,
-  FormLabel,
-  FormControlLabel,
-  makeStyles,
-  Radio,
-  RadioGroup,
-} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
-
+import { auth, firestore, firebase } from "../../utils/firebase";
 const useStyles = makeStyles({
   field: {
     marginTop: 20,
@@ -22,24 +14,43 @@ const useStyles = makeStyles({
     dispaly: "block",
   },
 });
-export default function MessageSubmit() {
+export default function MessageSubmit({ getMessage, uid }) {
   const classes = useStyles();
-  const history = useHistory();
-  const [details, setDetails] = useState("");
-  const [detailsError, setDetailsError] = useState(false);
+  const [text, setText] = useState("");
+  const [textError, setTextError] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setDetailsError(false);
-    if (details == "") {
-      setDetailsError(true);
+    if (!auth.currentUser) {
+      alert("請先登入");
+      History.push("/SignIn");
+      return;
     }
-    if (details) {
-      fetch("http://localhost:8000/notes", {
-        method: "post",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({}),
-      }).then(() => history.push("/"));
+    setTextError(false);
+    if (text == "") {
+      setTextError(true);
+    }
+    if (text) {
+      const ref = firestore
+        .collection("profileComment")
+        .doc(uid)
+        .collection("comment")
+        .doc();
+      const id = ref.id;
+      ref
+        .set({
+          id,
+          name: auth.currentUser.displayName,
+          uid: auth.currentUser.uid,
+          photoURL: auth.currentUser.photoURL,
+          text: text,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+        .then(() => {
+          getMessage();
+          setText("");
+          console.log(text);
+        });
     }
   };
 
@@ -57,7 +68,7 @@ export default function MessageSubmit() {
       <form noValidate autoComplete="off" onSubmit={handleSubmit}>
         <TextField
           className={classes.field}
-          onChange={(e) => setDetails(e.target.value)}
+          onChange={(e) => setText(e.target.value)}
           label="我想對他說...."
           variant="outlined"
           color="secondary"
@@ -65,7 +76,8 @@ export default function MessageSubmit() {
           rows={4}
           fullWidth
           required
-          error={detailsError}
+          value={text}
+          error={textError}
         />
 
         <br />

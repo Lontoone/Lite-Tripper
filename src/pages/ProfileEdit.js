@@ -38,10 +38,10 @@ export default function ProfileEdit() {
     setTitleError(false);
     setDetailsError(false);
 
-    if (title == "") {
+    if (title === "") {
       setTitleError(true);
     }
-    if (details == "") {
+    if (details === "") {
       setDetailsError(true);
     }
     if (title && details) {
