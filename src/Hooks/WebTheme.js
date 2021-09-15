@@ -136,16 +136,16 @@ const productCard = {
     //margin: theme.spacing(2),
     maxHeight: 256,
     [theme.breakpoints.down("sm")]: {
-      //maxHeight: 128,
       maxHeight: "25vh",
-      minWidth: 300,
+      //minWidth: 300,
+      minWidth: "85vw",
     },
 
     //margin: "auto",
   },
   productCard__container: {
     display: "flex",
-    width: "100%",
+    width: "90%",
     alignItems: "center",
     [theme.breakpoints.up("sm")]: {
       flexDirection: "row",
@@ -158,13 +158,19 @@ const productCard = {
       //minWidth: 700,
     },
   },
+  productCard__mediaContainer: {
+    display: "flex",
+    flexDirection: "column",
+  },
   productCard__media: {
     width: 200,
     height: 200,
-    margin:theme.spacing(0,1),
-    padding:theme.spacing(0),
+    margin: theme.spacing(0, 1),
+    padding: theme.spacing(0),
     overflow: "hidden",
+    borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
+      margin: theme.spacing(2),
       width: 100,
       height: 100,
     },
@@ -172,9 +178,9 @@ const productCard = {
   productCard__img: {
     margin: "auto",
     display: "block",
-    //maxWidth: "100%",
-    maxHeight: "100%",
-    objectFit: "cover",
+    maxHeight: "90%",
+    //objectFit: "cover",
+    objectFit: "none",
   },
 
   productCard__infoContainer: {
@@ -195,14 +201,16 @@ const productCard = {
     flexDirection: "row",
     //justifyContent:"center",
     alignItems: "baseline",
+    "align-self":"baseline",
     padding: 0,
     //flexGrow: 2,
   },
   productCard__subInfoButton: {
     //color:"#24E5B8",
     display: "flex",
+    flexGrow: 0,
     flexDirection: "row",
-    //justifyContent:"space-between",
+    justifyContent: "space-around",
     alignItems: "center",
   },
 
@@ -236,8 +244,13 @@ const productCard = {
       flexDirection: "column",
       //maxWidth: 150,
       fontSize: 12,
-      "-webkit-line-clamp": 2,
+      "-webkit-line-clamp": 3,
     },
+  },
+
+  productCard__priceText: {
+    "font-weight": 900,
+    fontSize: "1.5em",
   },
 };
 

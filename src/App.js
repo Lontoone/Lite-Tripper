@@ -54,10 +54,6 @@ function App() {
             <NoFoundPage />
           </Route>
 
-          {/*upload demo */}
-          <Route exact path="/upd">
-            <UpLoadImgDemo />
-          </Route>
         </Switch>
       </Router>
     </ThemeProvider>

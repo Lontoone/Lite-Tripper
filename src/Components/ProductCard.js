@@ -41,7 +41,7 @@ function ProductCard({
       <Paper className={classes.productCard__papaer}>
         <Grid container xs={12} className={classes.productCard__container}>
           {/* 預覽圖片 */}
-          <Grid item>
+          <Grid item className={classes.productCard__mediaContainer} >
             <ButtonBase className={classes.productCard__media}>
               <img
                 className={classes.productCard__img}
@@ -50,6 +50,20 @@ function ProductCard({
                 src={thumbnail}
               />
             </ButtonBase>
+            <Grid item container className={classes.productCard__subInfoButton}>
+              {/* favorites */}
+              <Grid item xs={2}>
+                <IconButton aria-label="add to favorites">
+                  <FavoriteBorderTwoToneIcon fontSize="small" />
+                </IconButton>
+              </Grid>
+              {/* favorites */}
+              <Grid item xs={2}>
+                <IconButton aria-label="share">
+                  <ShareTwoToneIcon fontSize="small" />
+                </IconButton>
+              </Grid>
+            </Grid>
           </Grid>
 
           {/* 右側資訊欄位 */}
@@ -101,28 +115,21 @@ function ProductCard({
                   <Typography color="textSecondary">({rating})</Typography>
                 </Grid>
 
-                {/* 價格 | 操作按鈕 */}
+                {/* 價格 */}
                 <Grid
                   item
                   xs={12}
                   container
-                  className={classes.productCard__subInfoButton}
                 >
-                  <Grid item>
+                  <Grid item xs={12}>
                     {/* 價格 */}
-                    <Typography variant="h5" color="primary">
+                    <Typography 
+                      component="h2" 
+                      color="primary"
+                      className={classes.productCard__priceText}
+                      >
                       ${price}
                     </Typography>{" "}
-                  </Grid>
-                  <Grid item xs={2}>
-                    <IconButton aria-label="add to favorites">
-                      <FavoriteBorderTwoToneIcon fontSize="small" />
-                    </IconButton>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <IconButton aria-label="share">
-                      <ShareTwoToneIcon fontSize="small" />
-                    </IconButton>
                   </Grid>
                 </Grid>
               </Grid>
