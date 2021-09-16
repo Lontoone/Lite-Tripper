@@ -16,7 +16,6 @@ function App() {
   //console.log(webTheme.theme);
   //const theme = WebTheme();
   //console.log(WebTheme());
-
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -41,12 +40,6 @@ function App() {
           <Route exact path="/Chat/">
             <Layout>
               <Chat />
-            </Layout>
-          </Route>
-          {/*聊天室*/}
-          <Route exact path="/ProfileEdit/:uid">
-            <Layout>
-              <ProfileEdit />
             </Layout>
           </Route>
           {/*若輸入其他網址會導入noFound頁面 */}

@@ -61,24 +61,23 @@ function SignIn() {
         const docRef = firestore.collection("users").doc(user.uid);
         await docRef.get().then((doc) => {
           if (doc.exists) {
-            // docRef.update({
-            //   id: user.uid,
-            //   name: user.displayName,
-            //   email: user.email,
-            //   photoURL: user.photoURL,
-            //   introduction: "暫無介紹",
-            // });
+            if (!doc.data().verification) {
+              History.push("/profile/" + doc.id);
+              return;
+            }
             History.push("/");
-          } else {
-            docRef.set({
-              id: user.uid,
-              name: user.displayName,
-              email: user.email,
-              photoURL: user.photoURL,
-              introduction: "暫無介紹",
-            });
-            History.push("/ProfileEdit/" + user.uid);
+            return;
           }
+          docRef.set({
+            id: user.uid,
+            name: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            verification: false,
+            introduction: "暫無介紹",
+          });
+          History.push("/profile/" + user.id);
+          return;
         });
       })
       .catch((err) => {
