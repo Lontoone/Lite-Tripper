@@ -38,6 +38,14 @@ function MessageBoard({ uid }) {
         setMessages(comments);
       });
   };
+  const handleDelete = (id) => {
+    ref
+      .doc(id)
+      .delete()
+      .then(() => {
+        getMessage();
+      });
+  };
   useEffect(() => {
     getMessage();
   }, [uid]);
@@ -75,16 +83,7 @@ function MessageBoard({ uid }) {
                       </div>
                     }
                     action={
-                      <IconButton
-                        onClick={() =>
-                          ref
-                            .doc(message.id)
-                            .delete()
-                            .then(() => {
-                              getMessage();
-                            })
-                        }
-                      >
+                      <IconButton onClick={() => handleDelete(message.id)}>
                         <DeleteOutlined />
                       </IconButton>
                     }
