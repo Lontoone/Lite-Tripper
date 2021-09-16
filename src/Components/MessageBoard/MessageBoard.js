@@ -39,12 +39,17 @@ function MessageBoard({ uid }) {
       });
   };
   const handleDelete = (id) => {
-    ref
-      .doc(id)
-      .delete()
-      .then(() => {
-        getMessage();
-      });
+    let result = window.confirm("確定刪除?");
+    if (result) {
+      ref
+        .doc(id)
+        .delete()
+        .then(() => {
+          getMessage();
+        });
+    } else {
+      return;
+    }
   };
   useEffect(() => {
     getMessage();
