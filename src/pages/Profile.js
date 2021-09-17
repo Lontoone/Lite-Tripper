@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core";
 //react
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, Link, TO } from "react-router-dom";
 import SignOutBtn from "../Components/SignoutBtn";
 //firebase
 import { firestore, auth } from "../utils/firebase";
@@ -23,6 +23,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 //page
 import ShopTab from "../Components/ShopTab";
 import MessageBoard from "../Components/MessageBoard/MessageBoard";
+import ProfileEdit from "../Components/ProfileEditDialog";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -72,6 +73,9 @@ function Profile() {
       .then((doc) => {
         if (doc.exists) {
           setUserData(doc.data());
+          if (!doc.data().verification) {
+            alert("請先編輯使用者資料");
+          }
         } else {
           //發現找不到該用戶重導向到404頁
           History.push("/404");
@@ -111,15 +115,19 @@ function Profile() {
               <Typography variant="subtitle1" noWrap>
                 {userData.email}
               </Typography>
+              <Typography variant="subtitle1" noWrap>
+                性別:{userData?.sex}
+              </Typography>
+              <Typography variant="subtitle1" noWrap>
+                年齡:{userData?.age}
+              </Typography>
             </Grid>
           </Grid>
           {/*操作按鈕 */}
           <Grid xs={4} item>
             {user?.uid == uid ? (
               <>
-                <Button variant="contained" color="primary">
-                  修改資料
-                </Button>
+                <ProfileEdit getUserData={getUserData} userData={userData} />
                 <SignOutBtn />
               </>
             ) : (

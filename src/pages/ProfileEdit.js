@@ -31,7 +31,7 @@ export default function ProfileEdit() {
   const [details, setDetails] = useState("");
   const [titleError, setTitleError] = useState(false);
   const [detailsError, setDetailsError] = useState(false);
-  const [category, setCategory] = useState("money");
+  const [sex, setSex] = useState("money");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,13 +44,31 @@ export default function ProfileEdit() {
     if (details === "") {
       setDetailsError(true);
     }
-    if (title && details) {
-      fetch("http://localhost:8000/notes", {
-        method: "post",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({ title, details, category }),
-      }).then(() => history.push("/"));
-    }
+    // if (title && details) {
+    //   const docRef = firestore.collection("users").doc(user.uid);
+    //     await docRef.get().then((doc) => {
+    //       if (doc.exists) {
+    //         // docRef.update({
+    //         //   id: user.uid,
+    //         //   name: user.displayName,
+    //         //   email: user.email,
+    //         //   photoURL: user.photoURL,
+    //         //   introduction: "暫無介紹",
+    //         // });
+    //         History.push("/");
+    //       } else {
+    //         docRef.set({
+    //           id: user.uid,
+    //           name: user.displayName,
+    //           email: user.email,
+    //           photoURL: user.photoURL,
+    //           introduction: "暫無介紹",
+    //         });
+    //         History.push("/ProfileEdit/" + user.uid);
+    //       }
+    //     });
+    //   }).then(() => history.push("/profile/"+uid));
+    // }
   };
 
   return (
@@ -92,19 +110,11 @@ export default function ProfileEdit() {
         <Radio value="goodbye" /> */}
 
         <FormControl className={classes.field}>
-          <FormLabel>Note Category</FormLabel>
-          <RadioGroup
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <FormControlLabel value="money" control={<Radio />} label="Money" />
-            <FormControlLabel value="todos" control={<Radio />} label="Todos" />
-            <FormControlLabel
-              value="reminders"
-              control={<Radio />}
-              label="Reminders"
-            />
-            <FormControlLabel value="work" control={<Radio />} label="Work" />
+          <FormLabel>性別</FormLabel>
+          <RadioGroup value={sex} onChange={(e) => setSex(e.target.value)}>
+            <FormControlLabel value="男生" control={<Radio />} label="男生" />
+            <FormControlLabel value="女生" control={<Radio />} label="女生" />
+            <FormControlLabel value="其他" control={<Radio />} label="其他" />
           </RadioGroup>
         </FormControl>
         <br />

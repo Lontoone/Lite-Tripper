@@ -38,6 +38,19 @@ function MessageBoard({ uid }) {
         setMessages(comments);
       });
   };
+  const handleDelete = (id) => {
+    let result = window.confirm("確定刪除?");
+    if (result) {
+      ref
+        .doc(id)
+        .delete()
+        .then(() => {
+          getMessage();
+        });
+    } else {
+      return;
+    }
+  };
   useEffect(() => {
     getMessage();
   }, [uid]);
@@ -75,16 +88,7 @@ function MessageBoard({ uid }) {
                       </div>
                     }
                     action={
-                      <IconButton
-                        onClick={() =>
-                          ref
-                            .doc(message.id)
-                            .delete()
-                            .then(() => {
-                              getMessage();
-                            })
-                        }
-                      >
+                      <IconButton onClick={() => handleDelete(message.id)}>
                         <DeleteOutlined />
                       </IconButton>
                     }

@@ -6,10 +6,15 @@ import { useHistory } from "react-router-dom";
 function SignOutBtn() {
   const History = useHistory();
   const logout = () => {
-    auth.signOut().then(() => {
-      History.push("/");
+    let result = window.confirm("確定登出?");
+    if (result) {
+      auth.signOut().then(() => {
+        History.push("/");
+        return;
+      });
+    } else {
       return;
-    });
+    }
   };
   return (
     <Button
