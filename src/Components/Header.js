@@ -61,7 +61,11 @@ function Header() {
         {/* 功能組 */}
         <div className={classes.header__nav}>
           {/* 聊天室 */}
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              history.push("/chat");
+            }}
+          >
             <ChatIcon />
           </IconButton>
 

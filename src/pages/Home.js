@@ -13,7 +13,6 @@ import {
 import React from "react";
 
 import webTheme from "../Hooks/WebTheme";
-import CarouselImage from "../Components/CarouselImage";
 import ProductCard from "../Components/ProductCard";
 import ProductFilter from "../Components/ProductFilter";
 function Home() {

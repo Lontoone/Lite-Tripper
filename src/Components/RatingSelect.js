@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0,2),
   },
 }));
-function RatingSelect() {
+function RatingSelect({setRating}) {
   const classes = useStyles();
   return (
     <ListItem className={classes.item}>
@@ -30,7 +30,7 @@ function RatingSelect() {
         <Rating
           name="ratng"
           //value={value}
-          //onChange={(event, newValue) => {setValue(newValue);}}
+          onChange={(event, newValue) => {setRating(newValue);}}
         />
       </Box>
     </ListItem>

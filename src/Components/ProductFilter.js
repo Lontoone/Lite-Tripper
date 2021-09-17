@@ -7,6 +7,7 @@ import {
   Icon,
   Button,
   Container,
+  ListItem,
 } from "@material-ui/core";
 import { orange } from "@material-ui/core/colors";
 import RegionSelect from "../Components/RegionSelect";
@@ -26,16 +27,29 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: orange[200],
     },
   },
+  title: {
+    paddingLeft: 0,
+  },
 }));
 
 function ProductFilter() {
   const classes = useStyles();
   const [minPrice, setminPrice] = useState(0);
   const [maxPrice, setmaxPrice] = useState(0);
+
+  const [weekDays, setWeekDays] = useState([]);
+  const [rating, setRating] = useState(5);
+
+  const [county, setCounty] = useState("");
+  const [town, setTown] = useState("");
+
+  //送出搜尋表單:
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("min ",minPrice, " max ", maxPrice);
-    //console.log(e.target.elements);
+    console.log("min ", minPrice, " max ", maxPrice);
+    console.log("week days ", ...weekDays);
+    console.log("rating ", rating);
+    console.log("region code ", county, " ", town);
   };
 
   return (
@@ -50,16 +64,20 @@ function ProductFilter() {
         }
       >
         {/* 區域選擇 */}
-        <RegionSelect />
+        <RegionSelect setCounty={setCounty} setTown={setTown} />
         {/* 價格選擇 */}
         <PriceRangeBox
           setMin={setminPrice}
           setMax={setmaxPrice}
         ></PriceRangeBox>
         {/* 星等選擇 */}
-        <RatingSelect></RatingSelect>
+        <RatingSelect setRating={setRating}></RatingSelect>
+
         {/* 星期選擇 */}
-        <WeekdaySelect></WeekdaySelect>
+        <ListItem>
+          <ListSubheader className={classes.title}>星期</ListSubheader>
+          <WeekdaySelect setWeekday={setWeekDays}></WeekdaySelect>
+        </ListItem>
       </List>
       <Button
         variant="contained"

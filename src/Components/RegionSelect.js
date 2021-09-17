@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RegionSelect() {
+function RegionSelect({setCounty,setTown}) {
   //城市資料集 https://data.gov.tw/dataset/101905
   const [countyList, setCountyList] = useState([]);
   const [selectedCounty, setSelectedCounty] = useState("A");
@@ -55,8 +55,13 @@ function RegionSelect() {
       });
   }, [selectedCounty]);
 
+  useEffect(()=>{
+    setCounty(selectedCounty);
+    setTown(selectedTown);
+  },[selectedCounty,selectedTown])
+
   return (
-    <ListItem className={classes.item}>
+    <ListItem className={classes.item} component="div">
       <ListSubheader
         className={classes.title}
         component="div"

@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import NoFoundPage from "./pages/NoFoundPage";
 import Chat from "./pages/Chat";
 import ProfileEdit from "./pages/ProfileEdit";
+import CreateProduct from "./pages/CreateProduct";
 //import theme from "./Hooks/WebTheme";
 
 function App() {
@@ -47,6 +48,12 @@ function App() {
           <Route exact path="/ProfileEdit/:uid">
             <Layout>
               <ProfileEdit />
+            </Layout>
+          </Route>
+          {/* 創建商品 */}
+          <Route exact path="/CreateProduct">
+            <Layout>
+              <CreateProduct/>
             </Layout>
           </Route>
           {/*若輸入其他網址會導入noFound頁面 */}
