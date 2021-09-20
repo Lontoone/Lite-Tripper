@@ -23,6 +23,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import ShopTab from "../Components/ShopTab";
 import MessageBoard from "../Components/MessageBoard/MessageBoard";
 import ProfileEdit from "../Components/ProfileEditDialog";
+import { getLoginData } from "../utils/localStorge";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//操作Tab的程式
 function TabPanel({ children, value, index }) {
   return (
     <div hidden={value !== index} id={index}>
@@ -70,14 +72,14 @@ function Profile() {
     await docRef
       .get()
       .then((doc) => {
-        if (doc.exists) {
-          setUserData(doc.data());
-          if (!doc.data().verification) {
-            alert("請先編輯使用者資料");
-          }
-        } else {
+        if (!doc.exists) {
           //發現找不到該用戶重導向到404頁
           History.push("/404");
+        }
+        setUserData(doc.data());
+        if (!doc.data().verification) {
+          //判定是否登入的人與該頁面為同一人
+          if (getLoginData()?.id === doc.data().id) alert("請先編輯使用者資料");
         }
       })
       .then(() => {
@@ -131,7 +133,13 @@ function Profile() {
               </>
             ) : (
               <>
-                <Button variant="contained" color="primary">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    History.push("/Chat/" + userData.id);
+                  }}
+                >
                   傳送訊息
                 </Button>
               </>

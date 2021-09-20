@@ -9,6 +9,7 @@ function SignOutBtn() {
     let result = window.confirm("確定登出?");
     if (result) {
       auth.signOut().then(() => {
+        localStorage.removeItem("userData");
         History.push("/");
         return;
       });

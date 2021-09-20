@@ -60,7 +60,10 @@ function SignIn() {
         const user = result.user;
         const docRef = firestore.collection("users").doc(user.uid);
         await docRef.get().then((doc) => {
+          //會員存在，紀錄資料並且重導向到首頁
           if (doc.exists) {
+            localStorage.setItem("userData", JSON.stringify(doc.data()));
+            //若沒有修改資料，重導向到會員頁面
             if (!doc.data().verification) {
               History.push("/profile/" + doc.id);
               return;

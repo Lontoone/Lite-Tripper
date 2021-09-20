@@ -43,16 +43,10 @@ function App() {
               <Chat />
             </Layout>
           </Route>
-          {/*聊天室*/}
-          <Route exact path="/ProfileEdit/:uid">
-            <Layout>
-              <ProfileEdit />
-            </Layout>
-          </Route>
           {/* 創建商品 */}
           <Route exact path="/CreateProduct">
             <Layout>
-              <CreateProduct/>
+              <CreateProduct />
             </Layout>
           </Route>
           {/*若輸入其他網址會導入noFound頁面 */}

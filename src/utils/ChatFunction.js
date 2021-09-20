@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { firestore } from "./firebase";
 
 export function GenChatId(uid1, uid2) {
   return "chat_" + (uid1 < uid2 ? uid1 + uid2 : uid2 + uid1);
 }
 
+//用在個人頁面上私訊按下的按鈕，會傳入雙方的uid
 export function initChat(senderUid, reciverUid) {
   //產生聊天室名稱
   const chatName = GenChatId(senderUid, reciverUid);
@@ -25,22 +26,28 @@ export function initChat(senderUid, reciverUid) {
   });
 }
 
-//取得聊天室的列表所需資料
-export function GetChatList(senderUid) {
-  // const [chatList, setChatList] = useState([]);
-  firestore
-    .collection("chat")
-    .where("users", "array-contains-any", [senderUid])
-    .get()
-    .then((chats) => {
-      const list = [];
-      const userlist = [];
-      chats.forEach((chat, index) => {
-        list.push(chat.data().id);
-        userlist.push(chat.data().users.find((user) => user != senderUid));
+//取得聊天室的列表所需資料，使用in可能造成只能最多有十個聊天室的窘境
+export function useGetChatList(senderUid) {
+  const [userList, setUserList] = useState([]);
+  const fetchData = () => {
+    firestore
+      .collection("chat")
+      .where("users", "array-contains-any", [senderUid])
+      .get()
+      .then((chats) => {
+        const userlist = [];
+        chats.forEach((chat, index) => {
+          userlist.push(chat.data().users.find((user) => user != senderUid));
+        });
+        console.log("用戶列表", userlist);
+        return userlist;
+      })
+      .then((userlist) => {
+        setUserList(userlist);
       });
-      console.log("聊天室列表 ", list);
-      console.log("用戶列表", userlist);
-      // setChatList(list);
-    });
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+  return [userList];
 }
