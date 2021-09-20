@@ -24,19 +24,27 @@ import SingleImageUpload from "../Components/SingleImageUpload";
 
 import MultiImageUpload from "../Components/MultiImageUpload";
 import MUIRichTextEditor from "mui-rte";
+import EditableSheetTable from "../Components/EditableSheetTable";
 
 const useStyles = makeStyles((theme) => ({
   paperContainer: {
     display: "flex",
     flexDirection: "column",
+    padding: theme.spacing(3, 5),
+    [theme.breakpoints.down("xs")]: {
+      padding: theme.spacing(3, 0),
+    },
   },
-
+  //行程基本資料
   topInputContaier: {
     display: "flex",
     flexDirection: "row",
     margin: "0 auto",
     width: "70%",
     [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.down("xs")]: {
       width: "100%",
       flexDirection: "column",
     },
@@ -56,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     "text-indent": "2em",
   },
+  //頭貼上傳
   thumbnailUploadContainer: {
     display: "flex",
     justifyContent: "center",
@@ -63,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
 
     [theme.breakpoints.down("sm")]: {
-      maxWidth: "90vw",
+      maxWidth: "50%",
       margin: "0 auto",
     },
   },
@@ -75,7 +84,10 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     display: "flex",
     flexDirection: "column",
+    margin: theme.spacing(3, 0),
   },
+
+  //文字編輯器
   textEdiotrContainer: {
     width: "70%",
     height: "50vh",
@@ -86,6 +98,20 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
       padding: 5,
     },
+  },
+
+  //確認
+  confirmButton: {
+    width: 200,
+    margin: "0 auto",
+    textAlign: "center",
+    backgroundColor: theme.palette.primary.main,
+    "&:hover": {
+      backgroundColor: theme.palette.secondary.main,
+    },
+    color: "white",
+    fontWeight: 1000,
+    fontSize: 18,
   },
 }));
 
@@ -122,6 +148,9 @@ function CreateProduct() {
       </Container>
     );
   };
+
+  const [billData, setBillData] = useState([]);
+  const [billTotal, setBillTotal] = useState(0);
 
   return (
     <Container className={classes.paperContainer}>
@@ -219,24 +248,25 @@ function CreateProduct() {
         </Grid>
       </Grid>
 
-      {/* 日程內容 */}
-      <Grid item>
-        <DividerWithText>日程內容</DividerWithText>
-        <Card>日程內容123</Card>
-      </Grid>
-
       {/* 報價單 */}
       <Grid item>
         <DividerWithText>報價單</DividerWithText>
-        <Card>報價單123</Card>
+        <Card>
+          <EditableSheetTable
+            dataCallback={setBillData}
+            totalCallback={setBillTotal}
+          />
+        </Card>
       </Grid>
 
       {/* 送出 */}
       <Grid item>
-        <DividerWithText>最後確認</DividerWithText>
-        <Card>價格100 
-          <Button>確認</Button>
-        </Card>
+        <DividerWithText>上傳</DividerWithText>
+        <div style={{ display: "flex" }}>
+          <Button className={classes.confirmButton} elevation={3}>
+            確認
+          </Button>
+        </div>
       </Grid>
     </Container>
   );

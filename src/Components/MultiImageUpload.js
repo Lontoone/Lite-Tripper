@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 auto",
     
     [theme.breakpoints.down("sm")]: {
-      minWidth: "95%",
+      //minWidth: "95%",
     }
   },
   previewImage: {

@@ -1,5 +1,5 @@
 //import { DropzoneArea } from "material-ui-dropzone";
-import { Box, Button } from "@material-ui/core";
+import { Box, Button, Paper } from "@material-ui/core";
 import React, { useState } from "react";
 
 function SingleImageUpload({ setFile }) {
@@ -24,6 +24,10 @@ function SingleImageUpload({ setFile }) {
           objectFit: "cover",
           display: "flex",
           margin: "0 auto",
+          height: "90%",
+          width: "90%",
+          overflow:"hidden",
+          maxHeight: 300,
         }}
         sx={{
           height: "90%",
