@@ -6,9 +6,11 @@ import {
   ListItem,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import { firestore } from "../../utils/firebase";
 
-function ChatCard({ uid }) {
+function ChatCard({ uid, chatId }) {
+  const History = useHistory();
   const [user, setUser] = useState({ photoURL: "", name: "" });
   const getUserData = () => {
     firestore
@@ -23,7 +25,6 @@ function ChatCard({ uid }) {
 
   //TODO: 抓出未讀訊息 送出時把訊息標示為isRead:false，在initChat時把isRead設為true
   //const getUnReadMessage = () => {};
-
   useEffect(() => {
     getUserData();
   }, []);
@@ -33,8 +34,7 @@ function ChatCard({ uid }) {
         button
         divider
         onClick={() => {
-          //TODO: 想一下是要點下去就InitChat 然後到底需要甚麼參數
-          // setRoomID(user.id);
+          History.push("/Chat/" + chatId);
         }}
       >
         <Container>

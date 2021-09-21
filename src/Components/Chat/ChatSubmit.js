@@ -1,17 +1,30 @@
 import React, { useState } from "react";
 import { TextField, Button, Grid } from "@material-ui/core";
-import { firestore } from "../../utils/firebase";
-function ChatSubmit({ roomId }) {
+import { firestore, firebase } from "../../utils/firebase";
+import { getLoginData } from "../../utils/localStorge";
+function ChatSubmit({ chatId }) {
   const [text, setText] = useState("");
   const [textError, setTextError] = useState(false);
-  const handleSubmit = (e) => {
+  const { photoURL, id } = getLoginData();
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTextError(false);
     if (text == "") {
       setTextError(true);
     }
     if (text) {
-      firestore.collection("chat");
+      await firestore
+        .collection("chat")
+        .doc(chatId)
+        .collection("message")
+        .doc()
+        .set({
+          text: text,
+          photoURL,
+          id,
+          time: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+      setText("");
     }
   };
   return (

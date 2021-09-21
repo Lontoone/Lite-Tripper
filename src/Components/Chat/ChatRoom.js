@@ -1,45 +1,100 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ChatMsg from "@mui-treasury/components/chatMsg/ChatMsg";
-import {
-  AppBar,
-  Container,
-  Typography,
-  Toolbar,
-  Paper,
-} from "@material-ui/core";
+import { Container, makeStyles, Paper, Box } from "@material-ui/core";
 import ChatSubmit from "./ChatSubmit";
+import ChatHeader from "./ChatHeader";
+import { useParams } from "react-router";
+import { firestore } from "../../utils/firebase";
+import { getLoginData } from "../../utils/localStorge";
 
-function ChatRoom({ roomId }) {
-  const messages = [
-    { avatar: "", message: "123" },
-    { avatar: "", message: "123" },
-    { avatar: "", message: "123" },
-    { avatar: "", message: "123" },
-    { avatar: "", message: "123" },
-    { avatar: "", message: "123" },
-  ];
+const useStyle = makeStyles((theme) => ({
+  //TODO : 高度問題
+  chatWindow: {
+    borderWidth: 1,
+    backgroundColor: theme.palette.background.paper,
+    position: "relative",
+    overflow: "auto",
+    Height: 1000,
+  },
+}));
+
+function ChatRoom({ currentChatName }) {
+  //網址參數
+  const { chatId } = useParams();
+  //樣式
+  const classes = useStyle();
+  //訊息
+  const [messages, setMessages] = useState([]);
+  //取得現在登入者資料
+  const currentUid = getLoginData().id;
+  //firebase的路徑
+  const ref = firestore.collection("chat").doc(chatId);
+  //定義進來的第一個動作
+  const initChat = () => {
+    //切出使用者
+    let userA = chatId.substring(0, 28);
+    let userB = chatId.substring(28, 56);
+    //確認聊天室是否存在
+    ref.get().then((docSnapshot) => {
+      //存在則抓對方的消息並且返回50則訊息
+      if (!docSnapshot.exists) {
+        //不存在則創立聊天室
+        ref.set({
+          id: chatId,
+          users: [userA, userB],
+        });
+      }
+    });
+  };
+  //取得訊息(現在只有五十個)
+  //TODO: 載入過去訊息?
+  const getMessage = () => {
+    ref
+      .collection("message")
+      .orderBy("time")
+      .limit(50)
+      .onSnapshot((snapshot) => {
+        const result = snapshot.docs.map((doc) => {
+          const docid = doc.id;
+          return { ...doc.data(), docid };
+        });
+
+        setMessages(result);
+      });
+  };
+
+  useEffect(() => {
+    initChat();
+    getMessage();
+  }, [chatId]);
   return (
     <div>
-      <AppBar position="static" elevation={3}>
-        <Toolbar>
-          <Typography variant="h6" component="div">
-            聊天室
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <ChatHeader title={currentChatName} />
+      <Box
+        sx={{
+          display: "flex",
+          "& > :not(style)": {
+            width: "100%",
+            height: "60vh",
+          },
+        }}
+      >
+        <Paper className={classes.chatWindow}>
+          <Container style={{ paddingTop: 5 }}>
+            {messages.map((message) => (
+              <ChatMsg
+                key={message.docid}
+                side={currentUid === message.id ? "right" : "left"}
+                avatar={message.photoURL}
+                messages={[message.text]}
+              />
+            ))}
+          </Container>
+        </Paper>
+      </Box>
       <Paper>
-        <Container style={{ paddingTop: 5 }}>
-          {messages.map((message, index) => (
-            <ChatMsg
-              key={index}
-              side={"right"}
-              avatar={message.avatar}
-              messages={[message.message]}
-            />
-          ))}
-        </Container>
-        <ChatSubmit roomId={roomId} />
+        <ChatSubmit chatId={chatId} />
       </Paper>
     </div>
   );

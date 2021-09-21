@@ -11,6 +11,7 @@ import NoFoundPage from "./pages/NoFoundPage";
 import Chat from "./pages/Chat";
 import ProfileEdit from "./pages/ProfileEdit";
 import CreateProduct from "./pages/CreateProduct";
+import ChatRoom from "./Components/Chat/ChatRoom";
 //import theme from "./Hooks/WebTheme";
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
             </Layout>
           </Route>
           {/*聊天室*/}
-          <Route exact path="/Chat/">
+          <Route path="/Chat">
             <Layout>
               <Chat />
             </Layout>

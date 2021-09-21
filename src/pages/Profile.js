@@ -24,6 +24,7 @@ import ShopTab from "../Components/ShopTab";
 import MessageBoard from "../Components/MessageBoard/MessageBoard";
 import ProfileEdit from "../Components/ProfileEditDialog";
 import { getLoginData } from "../utils/localStorge";
+import { GenChatId } from "../utils/ChatFunction";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -49,8 +50,6 @@ function TabPanel({ children, value, index }) {
 function Profile() {
   //style
   const classes = useStyles();
-  //授權hook
-  const [user, authLoading, error] = useAuthState(auth);
   //拉取資料的載入狀態
   const [loading, setLoading] = useState(true);
   //網址參數
@@ -66,7 +65,8 @@ function Profile() {
     photoURL: "",
     name: "",
   });
-
+  //取得當下登入人的id，若無則空字串
+  const currentUid = getLoginData()?.id || "";
   const getUserData = async () => {
     const docRef = firestore.collection("users").doc(uid);
     await docRef
@@ -75,6 +75,7 @@ function Profile() {
         if (!doc.exists) {
           //發現找不到該用戶重導向到404頁
           History.push("/404");
+          return;
         }
         setUserData(doc.data());
         if (!doc.data().verification) {
@@ -94,7 +95,7 @@ function Profile() {
     setValue(newValue);
   };
 
-  if (authLoading && loading) {
+  if (loading) {
     return <div></div>;
   }
   return (
@@ -126,7 +127,7 @@ function Profile() {
           </Grid>
           {/*操作按鈕 */}
           <Grid xs={4} item>
-            {user?.uid == uid ? (
+            {currentUid == uid ? (
               <>
                 <ProfileEdit getUserData={getUserData} userData={userData} />
                 <SignOutBtn />
@@ -137,7 +138,8 @@ function Profile() {
                   variant="contained"
                   color="primary"
                   onClick={() => {
-                    History.push("/Chat/" + userData.id);
+                    const chatId = GenChatId(currentUid, userData.id);
+                    History.push("/Chat/" + chatId);
                   }}
                 >
                   傳送訊息

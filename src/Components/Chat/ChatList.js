@@ -41,36 +41,10 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function ChatList({ setRoomID, userList }) {
+function ChatList({ userList, chatList }) {
   const classes = useStyle();
 
   // GetChatList(senderUid);
-  const users = [
-    {
-      id: "12",
-      uid: "123",
-      name: "123",
-      photoURL: "123",
-      timestamp: "123",
-      text: "123",
-    },
-    {
-      id: "123",
-      uid: "123",
-      name: "123",
-      photoURL: "123",
-      timestamp: "123",
-      text: "123",
-    },
-    {
-      id: "1",
-      uid: "123",
-      name: "123",
-      photoURL: "123",
-      timestamp: "123",
-      text: "123",
-    },
-  ];
   return (
     <Container>
       <AppBar position="static" className={classes.chatlistbar}>
@@ -81,9 +55,9 @@ function ChatList({ setRoomID, userList }) {
         </Toolbar>
       </AppBar>
       <List className={classes.list}>
-        {userList.map((uid) => (
-          <ChatCard uid={uid} />
-        ))}
+        {userList.map((uid, index) => {
+          return <ChatCard key={uid} uid={uid} chatId={chatList[index]} />;
+        })}
       </List>
     </Container>
   );
