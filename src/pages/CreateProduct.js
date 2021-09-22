@@ -12,7 +12,8 @@ import {
   makeStyles,
   Card,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import RegionSelect from "../Components/RegionSelect";
 import DividerWithText from "../Components/DividerWithText";
 import webTheme from "../Hooks/WebTheme";
@@ -24,7 +25,10 @@ import SingleImageUpload from "../Components/SingleImageUpload";
 
 import MultiImageUpload from "../Components/MultiImageUpload";
 import MUIRichTextEditor from "mui-rte";
+import { convertToRaw } from "draft-js";
 import EditableSheetTable from "../Components/EditableSheetTable";
+import { auth, firestore, UploadImg } from "../utils/firebase";
+import FullScreenDialog from "../Components/FullScreenDialog";
 
 const useStyles = makeStyles((theme) => ({
   paperContainer: {
@@ -115,45 +119,127 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function UploadProductData(product) {
+  console.log(
+    "submit ",
+    product.title,
+    product.weekDays,
+    product.county,
+    product.town,
+    product.images,
+    product.thumbnailPhoto,
+    product.billData,
+    product.billTotal,
+    product.discribe
+  );
+
+  console.log(auth.currentUser);
+  if (auth.currentUser == null) {
+    return (
+      <FullScreenDialog
+        title="創建失敗"
+        content="用戶尚未登入"
+        buttonText="確認"
+      />
+    );
+  }
+
+  var ref = firestore.collection("product").doc();
+  //上傳縮圖
+  var thumbnailUrl = Promise.resolve(
+    UploadImg(
+      "ProductImg",
+      ("thumb-", product.thumbnailPhoto.name),
+      product.thumbnailPhoto
+    )
+  )
+    .then((link) => {
+      return link;
+    })
+    .then((thubnaimLink) => {
+      //上傳圖片清單
+      var imagesUrls = Promise.all(
+        product.images.map((img) => UploadImg("ProductImg", img.name, img))
+      )
+        .then((url) => {
+          console.log(`All success`, url);
+          return url;
+        })
+        .then((urls) => {
+          //上傳產品
+          var newData = {
+            //id: key,
+            seller: auth.currentUser.uid,
+            title: product.title,
+            openWeek: product.weekDays,
+            county: product.county,
+            town: product.town,
+            images: urls,
+            thumbnail: thubnaimLink,
+            bill: { data: product.billData, total: product.billTotal },
+            discribe: product.discribe,
+          };
+          ref.set(newData);
+        })
+        .catch((error) => {
+          console.log(`Some failed: `, error.message);
+        });
+    });
+
+  //更新進user 商品
+  firestore.collection("users").doc(auth.currentUser.uid).update({
+    products: ref,
+  });
+}
+
 function CreateProduct() {
+  const history = useHistory();
+
   //const classes = webTheme();
   const classes = useStyles();
-
-  const [minPrice, setminPrice] = useState(0);
-  const [maxPrice, setmaxPrice] = useState(0);
+  const [title, setTitle] = useState("");
+  //const [minPrice, setminPrice] = useState(0);
+  //const [maxPrice, setmaxPrice] = useState(0);
 
   const [weekDays, setWeekDays] = useState([]);
-  const [rating, setRating] = useState(5);
+  //const [rating, setRating] = useState(5);
 
   const [county, setCounty] = useState("");
   const [town, setTown] = useState("");
+
+  const [discribe, setDiscribe] = useState("");
 
   const [images, setImages] = useState([]);
 
   const [thumbnailPhoto, setthumbnailPhoto] = useState(null);
 
-  const setPreviewPhotos = (e) => {
-    var files = e.target.files;
-    console.log(files);
-    return (
-      <Container>
-        {Array(files.length)
-          .fill()
-          .map(
-            (file, i) => (
-              console.log(files[i]),
-              (<img src={URL.createObjectURL(files[i])} />)
-            )
-          )}
-      </Container>
-    );
-  };
-
   const [billData, setBillData] = useState([]);
   const [billTotal, setBillTotal] = useState(0);
 
+  const [isAuthed, setIsAuthed] = useState(true);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    UploadProductData({
+      title,
+      weekDays,
+      county,
+      town,
+      images,
+      thumbnailPhoto,
+      billData,
+      billTotal,
+      discribe,
+    });
+  };
+
   return (
-    <Container className={classes.paperContainer}>
+    <Container
+      className={classes.paperContainer}
+      component="form"
+      onSubmit={handleSubmit}
+    >
       <Typography>新增行程</Typography>
 
       <Grid container component={Paper} className={classes.topInputContaier}>
@@ -163,7 +249,11 @@ function CreateProduct() {
             {/* 標題輸入 */}
             <ListItem variant="outlined">
               <ListSubheader>標題</ListSubheader>
-              <TextField></TextField>
+              <TextField
+                type="text"
+                required
+                onChange={(e) => setTitle(e.target.value)}
+              ></TextField>
             </ListItem>
 
             {/* 區域選擇 */}
@@ -231,7 +321,18 @@ function CreateProduct() {
       {/* 介紹內容 */}
       <DividerWithText>內容</DividerWithText>
       <Grid item component={Card} className={classes.textEdiotrContainer}>
-        <MUIRichTextEditor label="Start typing..." />,
+        <MUIRichTextEditor
+          label="Start typing..."
+          onChange={(value) => {
+            const content = JSON.stringify(
+              convertToRaw(value.getCurrentContent())
+            );
+            console.log(content);
+            setDiscribe(content);
+          }}
+          onSave={(value) => setDiscribe(value)}
+        />
+        ,
       </Grid>
 
       {/* 上傳多張圖片 */}
@@ -244,7 +345,7 @@ function CreateProduct() {
         <Grid itme>
           <DividerWithText>上傳風景照</DividerWithText>
 
-          <MultiImageUpload />
+          <MultiImageUpload setImagesCallback={setImages} />
         </Grid>
       </Grid>
 
@@ -263,11 +364,29 @@ function CreateProduct() {
       <Grid item>
         <DividerWithText>上傳</DividerWithText>
         <div style={{ display: "flex" }}>
-          <Button className={classes.confirmButton} elevation={3}>
+          <Button
+            type="submit"
+            className={classes.confirmButton}
+            elevation={3}
+            onClick={() => {
+              setIsAuthed(auth.currentUser != null);
+              console.log(isAuthed);
+            }}
+          >
             確認
           </Button>
         </div>
       </Grid>
+
+      <FullScreenDialog
+        isOpen={!isAuthed}
+        title="創建失敗"
+        content="用戶尚未登入"
+        buttonText="確認"
+        closeCallback={() => {
+          window.location.replace("/");
+        }}
+      />
     </Container>
   );
 }

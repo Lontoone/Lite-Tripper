@@ -57,8 +57,7 @@ function RegionSelect({setCounty,setTown}) {
 
   useEffect(()=>{
     setCounty(selectedCounty);
-    setTown(selectedTown);
-  },[selectedCounty,selectedTown])
+  },[selectedCounty])
 
   return (
     <ListItem className={classes.item} component="div">
@@ -86,7 +85,10 @@ function RegionSelect({setCounty,setTown}) {
       </ListSubheader>
       <Select name="town" className={classes.field}>
         {townList.map((data) => (
-          <MenuItem value={data.children[0].value}>
+          <MenuItem 
+            value={data.children[0].value}
+            onClick={setTown(data.children[0].value)}
+          >
             {data.children[1].value}
           </MenuItem>
         ))}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Grid,
@@ -21,11 +21,11 @@ const useStyles = makeStyles((theme) => ({
     //padding: 25,
     width: "70%",
     height: "100%",
-    paddingBottom:30,
-    margin:"0 auto",
+    paddingBottom: 30,
+    margin: "0 auto",
     [theme.breakpoints.down("sm")]: {
       minWidth: "95%",
-    }
+    },
   },
 
   actionButtonContaier: {
@@ -44,33 +44,37 @@ const useStyles = makeStyles((theme) => ({
     //backgroundColor: "#F45264",
     minHeight: "30vh",
     margin: "0 auto",
-    
+
     [theme.breakpoints.down("sm")]: {
       //minWidth: "95%",
-    }
+    },
   },
   previewImage: {
     flex: 1,
     height: "100%",
   },
-  defaultImage:{
-    maxHeight:"30vh",
-    display:"flex",
-    margin:"0 auto",
-    padding:20,
+  defaultImage: {
+    maxHeight: "30vh",
+    display: "flex",
+    margin: "0 auto",
+    padding: 20,
     [theme.breakpoints.down("sm")]: {
-      //width: "100%", 
-      height: "100%"
-    }
-  }
+      //width: "100%",
+      height: "100%",
+    },
+  },
 }));
 
-function MultiImageUpload() {
+function MultiImageUpload({ setImagesCallback }) {
   const classes = useStyles();
   const [images, setImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const photoMaxCount = 6;
+
+  useEffect(() => {
+    setImagesCallback(images);
+  }, [images]);
 
   const uploadImage = (e) => {
     //檔案太多不給上傳
@@ -101,7 +105,7 @@ function MultiImageUpload() {
           {/* 沒有圖片時的預設圖 */}
           <img
             src="https://react.semantic-ui.com/images/wireframe/image.png"
-            style={images.length > 0? { display: "none" }: {  }}
+            style={images.length > 0 ? { display: "none" } : {}}
             className={classes.defaultImage}
           />
           <ParallaxCarousel
