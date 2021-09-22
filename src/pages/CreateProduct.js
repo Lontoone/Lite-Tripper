@@ -149,7 +149,7 @@ function UploadProductData(product) {
   var thumbnailUrl = Promise.resolve(
     UploadImg(
       "ProductImg",
-      ("thumb-", product.thumbnailPhoto.name),
+      (ref,"-thumb-", product.thumbnailPhoto.name),
       product.thumbnailPhoto
     )
   )
@@ -159,7 +159,7 @@ function UploadProductData(product) {
     .then((thubnaimLink) => {
       //上傳圖片清單
       var imagesUrls = Promise.all(
-        product.images.map((img) => UploadImg("ProductImg", img.name, img))
+        product.images.map((img) => UploadImg("ProductImg", (ref,"-",img.name), img))
       )
         .then((url) => {
           console.log(`All success`, url);
