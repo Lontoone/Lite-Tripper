@@ -10,13 +10,62 @@ import {
   Select,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import webTheme from "../Hooks/WebTheme";
 import ProductCard from "../Components/ProductCard";
 import ProductFilter from "../Components/ProductFilter";
+import { getAllProductsList, getProductState } from "../utils/ProductFuntion";
+import { Pagination } from "@material-ui/lab";
+
+import { countyList } from "../utils/regionData";
+
 function Home() {
   const classes = webTheme();
+  const [page, setPage] = useState(1);
+  const [productData, setProductData] = useState([]);
+
+  const [orderSearch, setOrderSearch] = useState("createdAt");
+  const [startAfterSearch, setStartAfterSearch] = useState(null);
+  const [limitSearch, setLimitSearch] = useState(3);
+  const [maxPageCount, setMaxPageCount] = useState(0);
+  
+
+  useEffect(async () => {
+    //預設搜尋商品
+    const result = getAllProductsList(
+      orderSearch,
+      startAfterSearch,
+      limitSearch
+    ).then((e) => {
+      console.log(e, Array.isArray(e));
+      setProductData(e);
+    });
+
+    //頁數
+    getProductState().then((e) => {
+      setMaxPageCount(Math.ceil(e.count / limitSearch));
+    });
+
+   
+  }, []);
+
+  //頁數更新:
+  useEffect(() => {
+    //console.log(productData.length-1);
+    setStartAfterSearch(productData[productData.length-1]);
+  }, [page]);
+
+  //搜尋參數更新:
+  useEffect(() => {
+    getAllProductsList(
+      orderSearch,
+      startAfterSearch,
+      limitSearch
+    ).then((e) => {
+      setProductData(e);
+    });
+  }, [orderSearch,startAfterSearch,limitSearch]);
 
   return (
     <div>
@@ -66,23 +115,32 @@ function Home() {
             </Grid>
 
             {/* 商品清單 */}
+            {/*console.log(getAllProductsList())*/}
+            {/*console.log(getCounty())*/}
+
             <Grid item xs={12} sm={12} lg={12}>
-              <Paper className={classes.home__productList} elevation={0}>
-                {/* 商品Card */}
-                <ProductCard
-                  pid="1"
-                  title="一中街一日遊"
-                  county="台中市"
-                  town="北區"
-                  rating={4}
-                  price={100000}
-                  discribe="
-                  Mibro品牌是由小尋所研發生產，小尋是由 NOKIA 等知名品牌所投資的科技品牌，在無線通訊領域已經有超過 15 年以上經驗，是生態鏈智慧手錶第一大廠，更在海外市場銷售超過數十億的佳績，品質有口皆碑。本次，特別攜手睿濬國際推出亞洲首發唯一繁體中文與通過 NCC 認證的【Mibro color智慧手錶】，為台灣用戶帶來專屬台灣版調校、容易入手的價格以及完整的售後服務，讓大家安心入手，享受科技生活！"
-                  thumbnail="https://p2.bahamut.com.tw/B/2KU/09/497beea0399f4826c9560024091dk9l5.JPG"
-                ></ProductCard>
-              </Paper>
+              {productData.map((_, i) => {               
+                return (
+                  <Paper className={classes.home__productList} elevation={0}>
+                    {/* 商品Card */}
+                    <ProductCard datasnapShot={productData[i]}></ProductCard>
+                  </Paper>
+                );
+              })}
             </Grid>
           </Grid>
+        </Grid>
+
+        {/* 分頁按鈕 */}
+        <Grid item>
+          <Pagination
+            count={maxPageCount}
+            color="secondary"
+            page={page}
+            onChange={(event, value) => {
+              setPage(value);
+            }}
+          ></Pagination>
         </Grid>
       </Grid>
     </div>

@@ -20,7 +20,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RegionSelect({setCounty,setTown}) {
+function RegionSelect({ setCounty, setTown }) {
+  document.body.style = {
+    overflow: "visible !important",
+  };
+
   //城市資料集 https://data.gov.tw/dataset/101905
   const [countyList, setCountyList] = useState([]);
   const [selectedCounty, setSelectedCounty] = useState("A");
@@ -55,9 +59,9 @@ function RegionSelect({setCounty,setTown}) {
       });
   }, [selectedCounty]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setCounty(selectedCounty);
-  },[selectedCounty])
+  }, [selectedCounty]);
 
   return (
     <ListItem className={classes.item} component="div">
@@ -85,7 +89,7 @@ function RegionSelect({setCounty,setTown}) {
       </ListSubheader>
       <Select name="town" className={classes.field}>
         {townList.map((data) => (
-          <MenuItem 
+          <MenuItem
             value={data.children[0].value}
             onClick={setTown(data.children[0].value)}
           >

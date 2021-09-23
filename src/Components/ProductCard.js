@@ -12,43 +12,60 @@ import {
   Paper,
   ButtonBase,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Rating from "@material-ui/lab/Rating";
 import webTheme from "../Hooks/WebTheme";
 
 import FavoriteBorderTwoToneIcon from "@material-ui/icons/FavoriteBorderTwoTone";
 import ShareTwoToneIcon from "@material-ui/icons/ShareTwoTone";
 import { Link } from "react-router-dom";
+import { countyList,townCode2Name } from "../utils/regionData";
 
-function ProductCard({
-  pid,
-  title,
-  county,
-  town,
-  rating,
-  price,
-  discribe,
-  thumbnail,
-}) {
+function ProductCard({ datasnapShot }) {
+  const data = datasnapShot.data();
   const classes = webTheme();
+  const [region, setRegion] = useState([]);
+  const [county, setCounty] = useState("");
+  const [town,setTown]=useState("");
+
+  useEffect(() => {
+    //城市清單
+    countyList().then((list) => {
+      setRegion(list);
+    });
+  }, []);
+
+  useEffect(() => {
+    //解析城市代號
+    region.forEach((a) => {
+      if (a.code.value == data.county) {
+        setCounty(a.cityname.value)
+      }
+    });
+
+    //解析區域代號
+    townCode2Name( data.county,data.town,setTown);
+
+  }, [region]);
+
   return (
     <Button
       component={Link}
-      to={"/product/" + pid}
+      to={"/product/" + datasnapShot.id}
       variant="Outlined"
       color="primary"
-      style={{width:"100%"}}
+      style={{ width: "100%" }}
     >
       <Card className={classes.productCard__papaer}>
         <Grid container xs={12} className={classes.productCard__container}>
           {/* 預覽圖片 */}
-          <Grid item className={classes.productCard__mediaContainer} >
+          <Grid item className={classes.productCard__mediaContainer}>
             <ButtonBase className={classes.productCard__media}>
               <img
                 className={classes.productCard__img}
                 alt="thumbNail"
                 //src="https://p2.bahamut.com.tw/B/2KU/23/db331003ade211a643216ed0af1dnab5.JPG"
-                src={thumbnail}
+                src={data.thumbnail}
               />
             </ButtonBase>
             <Grid item container className={classes.productCard__subInfoButton}>
@@ -82,13 +99,14 @@ function ProductCard({
                 component="h5"
                 variant="h5"
               >
-                {title}
+                {data.title}
               </Typography>
             </Grid>
             <Grid item>
               {/* 地區 */}
               <Typography variant="subtitle1" color="textSecondary">
-                {county} {town}
+                {county}
+                {town}
               </Typography>
             </Grid>
 
@@ -109,27 +127,23 @@ function ProductCard({
                   <Rating
                     name="simple-controlled"
                     size="small"
-                    value={rating}
+                    value={data.rating}
                     readOnly
                     //value={value}
                   />
-                  <Typography color="textSecondary">({rating})</Typography>
+                  <Typography color="textSecondary">({data.rating})</Typography>
                 </Grid>
 
                 {/* 價格 */}
-                <Grid
-                  item
-                  xs={12}
-                  container
-                >
+                <Grid item xs={12} container>
                   <Grid item xs={12}>
                     {/* 價格 */}
-                    <Typography 
-                      component="h2" 
+                    <Typography
+                      component="h2"
                       color="primary"
                       className={classes.productCard__priceText}
-                      >
-                      ${price}
+                    >
+                      ${data.bill?.total}
                     </Typography>{" "}
                   </Grid>
                 </Grid>
@@ -138,7 +152,7 @@ function ProductCard({
               <Grid item xs direction="column">
                 {/* 內文 */}
                 <Typography className={classes.productCard__infoText}>
-                  {discribe}
+                  {data.discribe}
                 </Typography>
               </Grid>
             </Grid>
@@ -147,6 +161,14 @@ function ProductCard({
       </Card>
     </Button>
   );
+}
+function countyCode2Name(data, code) {
+  data.forEach((a) => {
+    console.log(a);
+    if (a.code.value == code) {
+      return a.cityname.value;
+    }
+  });
 }
 
 export default ProductCard;

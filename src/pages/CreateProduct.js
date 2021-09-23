@@ -27,7 +27,7 @@ import MultiImageUpload from "../Components/MultiImageUpload";
 import MUIRichTextEditor from "mui-rte";
 import { convertToRaw } from "draft-js";
 import EditableSheetTable from "../Components/EditableSheetTable";
-import { auth, firestore, UploadImg } from "../utils/firebase";
+import { auth,firebase, firestore, UploadImg } from "../utils/firebase";
 import FullScreenDialog from "../Components/FullScreenDialog";
 
 const useStyles = makeStyles((theme) => ({
@@ -145,11 +145,13 @@ function UploadProductData(product) {
   }
 
   var ref = firestore.collection("product").doc();
+  const batch = firestore.batch();
+
   //上傳縮圖
   var thumbnailUrl = Promise.resolve(
     UploadImg(
       "ProductImg",
-      (ref,"-thumb-", product.thumbnailPhoto.name),
+      (ref, "-thumb-", product.thumbnailPhoto.name),
       product.thumbnailPhoto
     )
   )
@@ -159,7 +161,9 @@ function UploadProductData(product) {
     .then((thubnaimLink) => {
       //上傳圖片清單
       var imagesUrls = Promise.all(
-        product.images.map((img) => UploadImg("ProductImg", (ref,"-",img.name), img))
+        product.images.map((img) =>
+          UploadImg("ProductImg", (ref, "-", img.name), img)
+        )
       )
         .then((url) => {
           console.log(`All success`, url);
@@ -178,18 +182,35 @@ function UploadProductData(product) {
             thumbnail: thubnaimLink,
             bill: { data: product.billData, total: product.billTotal },
             discribe: product.discribe,
+            createdAt:firebase.firestore.FieldValue.serverTimestamp(),
           };
-          ref.set(newData);
+          //ref.set(newData);
+          batch.set(ref, newData);
+
+          //更新進user 商品
+          const userRef = firestore.collection("users").doc(auth.currentUser.uid);          
+          batch.update(userRef,{ products: { id: ref.id } });
+
+          //更新商品doc數量
+          const statsRef=firestore.collection("product").doc("--stats--");
+          const increment=firebase.firestore.FieldValue.increment(1);
+          batch.set(statsRef,{count:increment});
+          batch.commit();
         })
+
         .catch((error) => {
           console.log(`Some failed: `, error.message);
         });
     });
-
+  /*
   //更新進user 商品
-  firestore.collection("users").doc(auth.currentUser.uid).update({
-    products: ref,
-  });
+  firestore
+    .collection("users")
+    .doc(auth.currentUser.uid)
+    .update({
+      products: { id: ref.id },
+    });
+    */
 }
 
 function CreateProduct() {
