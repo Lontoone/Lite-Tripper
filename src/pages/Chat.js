@@ -1,5 +1,5 @@
 import { Container, Grid } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useHistory } from "react-router";
 import ChatList from "../Components/Chat/ChatList";
 import ChatRoom from "../Components/Chat/ChatRoom";
