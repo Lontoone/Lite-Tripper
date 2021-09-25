@@ -194,7 +194,7 @@ const ParallaxCarousel = (datas, setIndex ) => {
   const renderChildren = ({ injectStyle, fineIndex }) =>
     data.map(({ id, title, subtitle, image }, i) => (
       <div key={id} className={classes.slide}>
-        {console.log(data[i])}
+        {/*console.log(data[i])*/}
         <Typography
           noWrap
           className={cx(classes.text, classes.title)}

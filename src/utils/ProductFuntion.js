@@ -6,11 +6,10 @@ async function getAllProductsList(
   startAfter = null,
   limit = 5
 ) {
-    console.log(startAfter);
   return await firestore
     .collection("product")
     .orderBy(orderBy)
-    //.startAfter(startAfter)
+    .startAfter(startAfter)
     .limit(limit)
     .get()
     .then((snapshot) => {
@@ -31,7 +30,40 @@ async function getProductState() {
       return snapShot.data();
     });
 }
-function getProduct() {}
 
+function getProductById(pid) {
+  let query = firestore.collection("product").doc(pid);
+  return query.get().then().catch();
+}
 
-export { getAllProductsList, getProductState };
+function getQueryByOption(collection, options = {}) {
+  //https://stackoverflow.com/questions/48036975/firestore-multiple-conditional-where-clauses
+  let { where, orderBy, limit } = options;
+  let query = firestore.collection(collection);
+  if (where) {
+    if (where[0] instanceof Array) {
+      // It's an array of array
+      for (let w of where) {
+        query = query.where(...w);
+      }
+    } else {
+      query = query.where(...where);
+    }
+  }
+
+  if (orderBy) {
+    query = query.orderBy(...orderBy);
+  }
+
+  if (limit) {
+    query = query.limit(limit);
+  }
+  return query.get().then().catch();
+}
+
+export {
+  getAllProductsList,
+  getProductState,
+  getQueryByOption,
+  getProductById,
+};

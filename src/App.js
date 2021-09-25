@@ -12,6 +12,7 @@ import Chat from "./pages/Chat";
 import ProfileEdit from "./pages/ProfileEdit";
 import CreateProduct from "./pages/CreateProduct";
 import ChatRoom from "./Components/Chat/ChatRoom";
+import Product from "./pages/Product";
 //import theme from "./Hooks/WebTheme";
 
 function App() {
@@ -48,6 +49,11 @@ function App() {
           <Route exact path="/CreateProduct">
             <Layout>
               <CreateProduct />
+            </Layout>
+          </Route>
+          <Route exact path="/Product">
+          <Layout>
+              <Product />
             </Layout>
           </Route>
           {/*若輸入其他網址會導入noFound頁面 */}

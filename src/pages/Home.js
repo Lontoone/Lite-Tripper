@@ -15,7 +15,11 @@ import React, { useEffect, useState } from "react";
 import webTheme from "../Hooks/WebTheme";
 import ProductCard from "../Components/ProductCard";
 import ProductFilter from "../Components/ProductFilter";
-import { getAllProductsList, getProductState } from "../utils/ProductFuntion";
+import {
+  getAllProductsList,
+  getProductState,
+  getQueryByOption,
+} from "../utils/ProductFuntion";
 import { Pagination } from "@material-ui/lab";
 
 import { countyList } from "../utils/regionData";
@@ -29,7 +33,6 @@ function Home() {
   const [startAfterSearch, setStartAfterSearch] = useState(null);
   const [limitSearch, setLimitSearch] = useState(3);
   const [maxPageCount, setMaxPageCount] = useState(0);
-  
 
   useEffect(async () => {
     //預設搜尋商品
@@ -46,26 +49,31 @@ function Home() {
     getProductState().then((e) => {
       setMaxPageCount(Math.ceil(e.count / limitSearch));
     });
+    /*
+    let options = {
+      //where:[["category", "==", "someCategory"]],
+      orderBy: ["createdAt"],
+      limit:5,
 
-   
+    };
+    console.log(getQueryByOption("product", options));
+    getQueryByOption("product", options).then((e) => {
+      console.log(e);
+    });*/
   }, []);
 
   //頁數更新:
   useEffect(() => {
     //console.log(productData.length-1);
-    setStartAfterSearch(productData[productData.length-1]);
+    setStartAfterSearch(productData[productData.length - 1]);
   }, [page]);
 
   //搜尋參數更新:
   useEffect(() => {
-    getAllProductsList(
-      orderSearch,
-      startAfterSearch,
-      limitSearch
-    ).then((e) => {
+    getAllProductsList(orderSearch, startAfterSearch, limitSearch).then((e) => {
       setProductData(e);
     });
-  }, [orderSearch,startAfterSearch,limitSearch]);
+  }, [orderSearch, startAfterSearch, limitSearch]);
 
   return (
     <div>
@@ -119,7 +127,7 @@ function Home() {
             {/*console.log(getCounty())*/}
 
             <Grid item xs={12} sm={12} lg={12}>
-              {productData.map((_, i) => {               
+              {productData.map((_, i) => {
                 return (
                   <Paper className={classes.home__productList} elevation={0}>
                     {/* 商品Card */}

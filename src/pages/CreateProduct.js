@@ -189,12 +189,12 @@ function UploadProductData(product) {
 
           //更新進user 商品
           const userRef = firestore.collection("users").doc(auth.currentUser.uid);          
-          batch.update(userRef,{ products: { id: ref.id } });
+          batch.update(userRef,{ products: firebase.firestore.FieldValue.arrayUnion(ref.id) });
 
           //更新商品doc數量
           const statsRef=firestore.collection("product").doc("--stats--");
           const increment=firebase.firestore.FieldValue.increment(1);
-          batch.set(statsRef,{count:increment});
+          batch.update(statsRef,{count:increment});
           batch.commit();
         })
 

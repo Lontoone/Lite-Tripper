@@ -232,13 +232,12 @@ const productCard = {
     overflow: "hidden",
 
     [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-      maxWidth: 150,
+      flexDirection: "column",      
       fontSize: 16,
     },
     
     [theme.breakpoints.down("xs")]: {      
-      minWidth:"50vw"
+      minWidth:"80vw"
     },
   },
 

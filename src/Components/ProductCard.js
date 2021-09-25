@@ -15,18 +15,19 @@ import {
 import React, { useEffect, useState } from "react";
 import Rating from "@material-ui/lab/Rating";
 import webTheme from "../Hooks/WebTheme";
-
+import MUIRichTextEditor from "mui-rte";
 import FavoriteBorderTwoToneIcon from "@material-ui/icons/FavoriteBorderTwoTone";
 import ShareTwoToneIcon from "@material-ui/icons/ShareTwoTone";
 import { Link } from "react-router-dom";
-import { countyList,townCode2Name } from "../utils/regionData";
+import { countyList, townCode2Name } from "../utils/regionData";
 
 function ProductCard({ datasnapShot }) {
+  
   const data = datasnapShot.data();
   const classes = webTheme();
   const [region, setRegion] = useState([]);
   const [county, setCounty] = useState("");
-  const [town,setTown]=useState("");
+  const [town, setTown] = useState("");
 
   useEffect(() => {
     //城市清單
@@ -39,19 +40,18 @@ function ProductCard({ datasnapShot }) {
     //解析城市代號
     region.forEach((a) => {
       if (a.code.value == data.county) {
-        setCounty(a.cityname.value)
+        setCounty(a.cityname.value);
       }
     });
 
     //解析區域代號
-    townCode2Name( data.county,data.town,setTown);
-
+    townCode2Name(data.county, data.town, setTown);
   }, [region]);
 
   return (
     <Button
       component={Link}
-      to={"/product/" + datasnapShot.id}
+      to={"/Product?pid=" + datasnapShot.id}
       variant="Outlined"
       color="primary"
       style={{ width: "100%" }}
@@ -152,7 +152,12 @@ function ProductCard({ datasnapShot }) {
               <Grid item xs direction="column">
                 {/* 內文 */}
                 <Typography className={classes.productCard__infoText}>
-                  {data.discribe}
+                  {/*data.discribe*/}
+                  <MUIRichTextEditor
+                    defaultValue={data.discribe}
+                    toolbar={false}
+                    readOnly
+                  />
                 </Typography>
               </Grid>
             </Grid>
