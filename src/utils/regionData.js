@@ -31,8 +31,8 @@ async function townCode2Name(cityCode, townCode,callback) {
   return await fetch(url)
     .then((res) => res.text())
     .then((data) => {
-      var xml = new XMLParser().parseFromString(data);
-      xml.children.forEach((a) => {
+      var xml = new XMLParser().parseFromString(data);      
+      xml?.children?.forEach((a) => {
         if (a.children[0].value == townCode) {
           //return a.children[1];
           callback(a.children[1].value)

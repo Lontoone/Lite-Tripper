@@ -27,7 +27,7 @@ import MultiImageUpload from "../Components/MultiImageUpload";
 import MUIRichTextEditor from "mui-rte";
 import { convertToRaw } from "draft-js";
 import EditableSheetTable from "../Components/EditableSheetTable";
-import { auth,firebase, firestore, UploadImg } from "../utils/firebase";
+import { auth, firebase, firestore, UploadImg } from "../utils/firebase";
 import FullScreenDialog from "../Components/FullScreenDialog";
 
 const useStyles = makeStyles((theme) => ({
@@ -175,6 +175,8 @@ function UploadProductData(product) {
             //id: key,
             seller: auth.currentUser.uid,
             title: product.title,
+            peopleCountLimit: product.peopleCountLimit,
+            duration:product.duration,
             openWeek: product.weekDays,
             county: product.county,
             town: product.town,
@@ -182,19 +184,23 @@ function UploadProductData(product) {
             thumbnail: thubnaimLink,
             bill: { data: product.billData, total: product.billTotal },
             discribe: product.discribe,
-            createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           };
           //ref.set(newData);
           batch.set(ref, newData);
 
           //更新進user 商品
-          const userRef = firestore.collection("users").doc(auth.currentUser.uid);          
-          batch.update(userRef,{ products: firebase.firestore.FieldValue.arrayUnion(ref.id) });
+          const userRef = firestore
+            .collection("users")
+            .doc(auth.currentUser.uid);
+          batch.update(userRef, {
+            products: firebase.firestore.FieldValue.arrayUnion(ref.id),
+          });
 
           //更新商品doc數量
-          const statsRef=firestore.collection("product").doc("--stats--");
-          const increment=firebase.firestore.FieldValue.increment(1);
-          batch.update(statsRef,{count:increment});
+          const statsRef = firestore.collection("product").doc("--stats--");
+          const increment = firebase.firestore.FieldValue.increment(1);
+          batch.update(statsRef, { count: increment });
           batch.commit();
         })
 
@@ -219,11 +225,9 @@ function CreateProduct() {
   //const classes = webTheme();
   const classes = useStyles();
   const [title, setTitle] = useState("");
-  //const [minPrice, setminPrice] = useState(0);
-  //const [maxPrice, setmaxPrice] = useState(0);
-
+  const [peopleCountLimit, setPeopleCountLimit] = useState(1);
+  const [duration, setDuration] = useState(1);
   const [weekDays, setWeekDays] = useState([]);
-  //const [rating, setRating] = useState(5);
 
   const [county, setCounty] = useState("");
   const [town, setTown] = useState("");
@@ -244,7 +248,9 @@ function CreateProduct() {
 
     UploadProductData({
       title,
+      peopleCountLimit,
       weekDays,
+      duration,
       county,
       town,
       images,
@@ -294,6 +300,10 @@ function CreateProduct() {
                   style: { textAlign: "center", padding: 0 },
                 }}
                 className={classes.smallInputBox}
+                onChange={(e) => {
+                  setPeopleCountLimit(e.target.value);
+                }}
+                value={peopleCountLimit}
               ></TextField>
               <ListSubheader>人</ListSubheader>
             </ListItem>
@@ -315,6 +325,8 @@ function CreateProduct() {
                   maxLength: 2,
                   style: { textAlign: "center", padding: 0 },
                 }}
+                onChange={(e) => setDuration(e.target.value)}
+                value={duration}
                 className={classes.smallInputBox}
               ></TextField>
               <ListSubheader>天</ListSubheader>

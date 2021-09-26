@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import { countyList, townCode2Name } from "../utils/regionData";
 
 function ProductCard({ datasnapShot }) {
-  
+  console.log(datasnapShot);
   const data = datasnapShot.data();
   const classes = webTheme();
   const [region, setRegion] = useState([]);
