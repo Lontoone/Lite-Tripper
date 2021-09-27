@@ -16,43 +16,6 @@ const root = {
     flexDirection: "row",
   },
 };
-const home = {
-  home__container: {
-    //background: "#f9f9f9",
-    width: "95%",
-    margin:"0 auto",
-    //padding: theme.spacing(1),
-  },
-  home__ad: {
-    height: "30vh",
-    maxWidth:1280,
-    margin:"0 auto",
-    textAlign: "center",
-    display: "flex",
-    justifyContent: "center",
-  },
-  home__bodyContainer: {
-    display: "flex",
-    flexDirection: "row",
-    width: "100vw",
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",
-    },
-  },
-  home__filterBox: {
-    width: "30%",
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.down("sm")]: {
-      display: "none",
-    },
-  },
-  home__productList: {
-    margin: 2,
-    paddingTop: 2,
-    paddingBottom: 2,
-  },
-};
-
 const header = {
   header__padding: theme.mixins.toolbar,
   header__container: {
@@ -124,31 +87,31 @@ const header = {
   header__avatar: {},
 };
 
-
 const productCard = {
   productCard__papaer: {
     minWidth: 400,
     display: "flex",
-    flex:1,
+    flex: 1,
     flexGrow: 1,
-    
+
     //padding: theme.spacing(2),
     //margin: theme.spacing(2),
-    maxHeight: 256,
+    maxHeight: 160,
     [theme.breakpoints.down("sm")]: {
       maxHeight: "25vh",
-      maxWidth: "85vw",      
+      maxWidth: "85vw",
     },
-    [theme.breakpoints.down("xs")]: {      
-      minWidth: 10, 
-      maxHeight: "60vh",     
+    [theme.breakpoints.down("xs")]: {
+      minWidth: 10,
+      maxHeight: "60vh",
     },
     //margin: "auto",
   },
   productCard__container: {
     display: "flex",
     width: "90%",
-    alignItems: "center",
+    margin:theme.spacing(1),
+    //alignItems: "center",
     [theme.breakpoints.up("sm")]: {
       flexDirection: "row",
       minWidth: 500,
@@ -156,10 +119,10 @@ const productCard = {
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
       minWidth: 300,
-    },    
+    },
 
-    [theme.breakpoints.down("xs")]: {      
-      flexDirection: "row",     
+    [theme.breakpoints.down("xs")]: {
+      flexDirection: "row",
     },
   },
   productCard__mediaContainer: {
@@ -178,10 +141,10 @@ const productCard = {
       width: 100,
       height: 100,
     },
-       
-    [theme.breakpoints.down("xs")]: {      
+
+    [theme.breakpoints.down("xs")]: {
       width: "50vw",
-      height: "50vw",   
+      height: "50vw",
     },
   },
   productCard__img: {
@@ -210,9 +173,8 @@ const productCard = {
     flexDirection: "row",
     //justifyContent:"center",
     alignItems: "baseline",
-    "align-self":"baseline",
+    "align-self": "baseline",
     padding: 0,
-       
   },
   productCard__subInfoButton: {
     //color:"#24E5B8",
@@ -225,37 +187,41 @@ const productCard = {
 
   productCard__titleText: {
     maxWidth: "40vw",
+    //maxWidth: "90%",
     display: "-webkit-box",
     "-webkit-box-orient": "vertical",
     "-webkit-line-clamp": 2,
     textOverflow: "ellipsis",
     overflow: "hidden",
-
+    fontSize: 18,
     [theme.breakpoints.down("sm")]: {
-      flexDirection: "column",      
+      flexDirection: "column",
+      overflow: "",
       fontSize: 16,
     },
-    
-    [theme.breakpoints.down("xs")]: {      
-      minWidth:"80vw"
+
+    [theme.breakpoints.down("xs")]: {
+      minWidth: "80%",
     },
   },
 
   productCard__infoText: {
-    maxWidth: "40vw",
+    //maxWidth: "40vw",
+    maxHeight:"90%",
+    flex:1,
     display: "-webkit-box",
     "-webkit-box-orient": "vertical",
-    "-webkit-line-clamp": 5,
+    "-webkit-line-clamp": 4,
     textOverflow: "ellipsis",
     overflow: "hidden",
     lineHeight: "1.8em",
-    fontSize: 14,
+    fontSize: 12,
     "letter-spacing": "0.3em",
 
     [theme.breakpoints.down("sm")]: {
       flexDirection: "column",
       //maxWidth: 150,
-      fontSize: 12,
+      fontSize: 10,
       "-webkit-line-clamp": 3,
     },
   },
@@ -266,12 +232,10 @@ const productCard = {
   },
 };
 
-const createProduct={
-
-};
+const createProduct = {};
 
 const useStyles = makeStyles({
-  ...home,
+  //...home,
   ...header,
   ...productCard,
 });

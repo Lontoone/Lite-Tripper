@@ -28,7 +28,19 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   title: {
-    paddingLeft: 0,
+    //paddingLeft: 0,
+    //fontSize: 12,
+  },
+  ratingContainer: {
+    display: "flex",
+    flexDirection: "row",
+
+  },
+  subContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "start",
   },
 }));
 
@@ -71,10 +83,13 @@ function ProductFilter() {
           setMax={setmaxPrice}
         ></PriceRangeBox>
         {/* 星等選擇 */}
-        <RatingSelect setRating={setRating}></RatingSelect>
+        <div className={classes.ratingContainer}>
+          <ListSubheader className={classes.title}> 星等</ListSubheader>
+          <RatingSelect setRating={setRating}></RatingSelect>
+        </div>
 
         {/* 星期選擇 */}
-        <ListItem>
+        <ListItem className={classes.subContainer}>
           <ListSubheader className={classes.title}>星期</ListSubheader>
           <WeekdaySelect setWeekday={setWeekDays}></WeekdaySelect>
         </ListItem>

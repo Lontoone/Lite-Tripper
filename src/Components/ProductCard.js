@@ -92,8 +92,8 @@ function ProductCard({ datasnapShot }) {
             xs={8}
             className={classes.productCard__infoContainer}
           >
+            {/* 標題 */}
             <Grid item>
-              {/* 標題 */}
               <Typography
                 className={classes.productCard__titleText}
                 component="h5"
@@ -102,55 +102,61 @@ function ProductCard({ datasnapShot }) {
                 {data.title}
               </Typography>
             </Grid>
-            <Grid item>
-              {/* 地區 */}
-              <Typography variant="subtitle1" color="textSecondary">
-                {county}
-                {town}
-              </Typography>
-            </Grid>
-
-            {/* 星等 | 內容 */}
-            <Grid
-              item
-              container
-              className={classes.productCard__subInfoContainer}
-            >
-              <Grid
-                item
-                container
-                xs={3}
-                className={classes.productCard__subInfoLeft}
-              >
-                {/* 星等 */}
-                <Grid item container alignItems="center">
-                  <Rating
-                    name="simple-controlled"
-                    size="small"
-                    value={data.rating}
-                    readOnly
-                    //value={value}
-                  />
-                  <Typography color="textSecondary">({data.rating})</Typography>
+            {/* 標題以下內容 */}
+            <Grid item container>
+              <div>
+                {/* 地區 */}
+                <Grid item>
+                  <Typography variant="subtitle1" color="textSecondary">
+                    {county}
+                    {town}
+                  </Typography>
                 </Grid>
 
-                {/* 價格 */}
-                <Grid item xs={12} container>
-                  <Grid item xs={12}>
+                {/* 星等 | 價格 */}
+                <Grid
+                  item
+                  container
+                  className={classes.productCard__subInfoContainer}
+                >
+                  <Grid
+                    item
+                    container
+                    xs={3}
+                    className={classes.productCard__subInfoLeft}
+                  >
+                    {/* 星等 */}
+                    <Grid item container alignItems="center">
+                      <Rating
+                        name="simple-controlled"
+                        size="small"
+                        value={data.rating}
+                        readOnly
+                        //value={value}
+                      />
+                      <Typography color="textSecondary">
+                        ({data.rating})
+                      </Typography>
+                    </Grid>
+
                     {/* 價格 */}
-                    <Typography
-                      component="h2"
-                      color="primary"
-                      className={classes.productCard__priceText}
-                    >
-                      ${data.bill?.total}
-                    </Typography>{" "}
+                    <Grid item xs={12} container>
+                      <Grid item xs={12}>
+                        {/* 價格 */}
+                        <Typography
+                          component="h2"
+                          color="primary"
+                          className={classes.productCard__priceText}
+                        >
+                          ${data.bill?.total}
+                        </Typography>{" "}
+                      </Grid>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-
+              </div>
+              {/* 內文 */}
               <Grid item xs direction="column">
-                {/* 內文 */}
                 <Typography className={classes.productCard__infoText}>
                   {/*data.discribe*/}
                   <MUIRichTextEditor

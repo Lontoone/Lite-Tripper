@@ -13,14 +13,13 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 0,
   },
   item: {
-    padding: theme.spacing(0,2),
+    padding: theme.spacing(0, 2),
   },
 }));
-function RatingSelect({setRating}) {
+function RatingSelect({ setRating }) {
   const classes = useStyles();
   return (
-    <ListItem className={classes.item}>
-      <ListSubheader className={classes.title}> 星等</ListSubheader>
+    <div className={classes.root}>
       <Box
         className={classes.root}
         component="fieldset"
@@ -30,10 +29,12 @@ function RatingSelect({setRating}) {
         <Rating
           name="ratng"
           //value={value}
-          onChange={(event, newValue) => {setRating(newValue);}}
+          onChange={(event, newValue) => {
+            setRating(newValue);
+          }}
         />
       </Box>
-    </ListItem>
+    </div>
   );
 }
 

@@ -21,11 +21,73 @@ import {
   getQueryByOption,
 } from "../utils/ProductFuntion";
 import { Pagination } from "@material-ui/lab";
-
+import { makeStyles } from "@material-ui/core";
+import TpiNewsFrame from "../Components/TpiNewsFrame";
 import { countyList } from "../utils/regionData";
 
+const useStyles = makeStyles((theme) => ({
+  home__container: {
+    //background: "#f9f9f9",
+    width: "95%",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+  },
+  home__ad: {
+    height: "30vh",
+    maxWidth: 1280,
+    margin: "0 auto",
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+  },
+  home__bodyContainer: {
+    display: "flex",
+    flexDirection: "row",
+    width: "80%",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+  },
+  home__filterBox: {
+    width: "30%",
+    display: "flex",
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+  home__productListContainer: {
+    flex: 1,
+    flexGrow: 2,
+    margin: 20,
+    [theme.breakpoints.up("sm")]: {
+      minWidth: "70%",
+    },
+  },
+  home__productList: {
+    margin: 2,
+    paddingTop: 2,
+    paddingBottom: 2,
+  },
+
+  home__pageButtonContainer: {
+    margin: "0 auto",
+  },
+  home__broadCastContainer: {
+    minWidth: "28%",
+    minHeight: 500,
+    maxHeight: "50vh",
+    display: "flex",
+    //margin:"0 auto",
+    [theme.breakpoints.down("sm")]: {
+      minWidth: 350
+    },
+  },
+}));
+
 function Home() {
-  const classes = webTheme();
+  const classes = useStyles();
   const [page, setPage] = useState(1);
   const [productData, setProductData] = useState([]);
 
@@ -77,12 +139,7 @@ function Home() {
 
   return (
     <div>
-      <Grid
-        container
-        spacing={3}
-        className={classes.home__container}
-        //style={webTheme.home.root}
-      >
+      <Grid container spacing={3} className={classes.home__container}>
         {/* 廣告區 */}
         <Grid item xs={12}>
           <Paper
@@ -95,37 +152,30 @@ function Home() {
         </Grid>
 
         {/* 商品內容版 */}
-        <Grid
-          item
-          className={classes.home__bodyContainer}
-          //style={webTheme.home.home__bodyContainer}
-        >
+        <Grid item className={classes.home__bodyContainer}>
           {/* 搜尋篩選調整 */}
-          <Grid
-            item
-            className={classes.home__filterBox}
-            xs={0}
-            sm={0}
-            lg={3}
-            //style={webTheme.home.home__filterBox}
-          >
+          <Grid item className={classes.home__filterBox} xs={0} sm={0} lg={3}>
             {/* 商品篩選 */}
             <ProductFilter />
           </Grid>
 
           {/* 商品區 */}
-          <Grid item container xs={12} sm={12} lg={9}>
-            {/* 排序 */}
+          <Grid
+            item
+            container
+            xs={12}
+            sm={12}
+            className={classes.home__productListContainer}
+          >
+            {/* 
+            //TODO: 排序 
             <Grid item xs={12} sm={12} lg={4}>
               <Paper>
                 <Container>排序....</Container>
               </Paper>
-            </Grid>
+            </Grid>*/}
 
             {/* 商品清單 */}
-            {/*console.log(getAllProductsList())*/}
-            {/*console.log(getCounty())*/}
-
             <Grid item xs={12} sm={12} lg={12}>
               {productData.map((_, i) => {
                 return (
@@ -137,10 +187,15 @@ function Home() {
               })}
             </Grid>
           </Grid>
+
+          {/* 台北新訊息 推播 */}
+          <Grid item className={classes.home__broadCastContainer}>
+            <TpiNewsFrame />
+          </Grid>
         </Grid>
 
         {/* 分頁按鈕 */}
-        <Grid item>
+        <Grid item className={classes.home__pageButtonContainer}>
           <Pagination
             count={maxPageCount}
             color="secondary"
