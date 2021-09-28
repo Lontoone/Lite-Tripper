@@ -9,14 +9,19 @@ async function getUserProducts(uid) {
     .doc(uid)
     .get()
     .then((data) => {
+      const product = data.data().products;
+      if (!product) {
+        return;
+      }
       const refsPromise = data
         .data()
-        .products?.map((id) => firestore.collection("product").doc(`${id}`).get());
-  
-      return Promise.all(refsPromise)
-      .then((e) => {
+        .products?.map((id) =>
+          firestore.collection("product").doc(`${id}`).get()
+        );
+
+      return Promise.all(refsPromise).then((e) => {
         console.log(e);
-        return(e);
+        return e;
       });
     });
 }

@@ -11,7 +11,7 @@ function ShopTab({ uid }) {
       console.log(e, Array.isArray(e));
       setProducts(e);
     });
-  }, []);
+  }, [uid]);
 
   return (
     <List>
