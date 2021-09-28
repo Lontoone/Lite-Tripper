@@ -19,7 +19,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function ChatRoom() {
+function ChatRoom({ handleDrawerToggle, drawerWidth }) {
   //網址參數
   const { chatId } = useParams();
   //樣式
@@ -79,7 +79,11 @@ function ChatRoom() {
   }
   return (
     <div>
-      <ChatHeader reciverid={reciverid} chatId={chatId} />
+      <ChatHeader
+        reciverid={reciverid}
+        drawerWidth={drawerWidth}
+        handleDrawerToggle={handleDrawerToggle}
+      />
       <Box
         sx={{
           display: "flex",
