@@ -19,7 +19,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function ChatRoom({ currentChatName }) {
+function ChatRoom() {
   //網址參數
   const { chatId } = useParams();
   //樣式
@@ -30,22 +30,26 @@ function ChatRoom({ currentChatName }) {
   const currentUid = getLoginData().id;
   //firebase的路徑
   const ref = firestore.collection("chat").doc(chatId);
+  //接收者的id
+  const [reciverid, setReciverid] = useState("");
+  const [loading, setLoading] = useState(true);
   //定義進來的第一個動作
   const initChat = () => {
     //切出使用者
-    let userA = chatId.substring(0, 28);
-    let userB = chatId.substring(28, 56);
+    const users = [chatId.substring(0, 28), chatId.substring(28, 56)];
     //確認聊天室是否存在
     ref.get().then((docSnapshot) => {
-      //存在則抓對方的消息並且返回50則訊息
+      //不存在則創立聊天室
       if (!docSnapshot.exists) {
-        //不存在則創立聊天室
         ref.set({
           id: chatId,
-          users: [userA, userB],
+          users,
         });
       }
     });
+    const reciverid = users.filter((item) => item != currentUid)[0];
+    console.log("對方的uid", reciverid);
+    setReciverid(reciverid);
   };
   //取得訊息(現在只有五十個)
   //TODO: 載入過去訊息?
@@ -67,10 +71,15 @@ function ChatRoom({ currentChatName }) {
   useEffect(() => {
     initChat();
     getMessage();
+    setLoading(false);
   }, [chatId]);
+
+  if (loading) {
+    return <div>loading...</div>;
+  }
   return (
     <div>
-      <ChatHeader title={currentChatName} />
+      <ChatHeader reciverid={reciverid} chatId={chatId} />
       <Box
         sx={{
           display: "flex",

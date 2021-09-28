@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
-function ChatHeader({ title }) {
+import { firestore } from "../../utils/firebase";
+function ChatHeader({ reciverid }) {
+  const [title, setTitle] = useState("");
+  useEffect(() => {
+    firestore
+      .collection("users")
+      .doc(reciverid)
+      .get()
+      .then((result) => {
+        setTitle(result.data()?.name);
+      });
+  }, []);
   return (
     <div>
       <AppBar position="static" elevation={3}>
