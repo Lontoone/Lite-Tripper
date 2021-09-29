@@ -13,10 +13,7 @@ async function getAllProductsList(
     .limit(limit)
     .get()
     .then((snapshot) => {
-      return snapshot.docs;
-      snapshot.docs.forEach((doc) => {
-        //console.log(doc.data());
-      });
+      return snapshot.docs;     
     });
 }
 

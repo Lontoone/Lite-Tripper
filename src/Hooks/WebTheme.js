@@ -24,7 +24,8 @@ const header = {
     margin: theme.spacing(0, 1),
   },
   header__logo: {
-    width: "100px",
+    //width: "100px",
+    maxHeight:"50px",
     margin: theme.spacing(1),
     [theme.breakpoints.down("sm")]: {
       display: "none",

@@ -13,12 +13,8 @@ import ProfileEdit from "./pages/ProfileEdit";
 import CreateProduct from "./pages/CreateProduct";
 import ChatRoom from "./Components/Chat/ChatRoom";
 import Product from "./pages/Product";
-//import theme from "./Hooks/WebTheme";
 
 function App() {
-  //console.log(webTheme.theme);
-  //const theme = WebTheme();
-  //console.log(WebTheme());
   return (
     <ThemeProvider theme={theme}>
       <Router>

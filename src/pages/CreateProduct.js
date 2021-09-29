@@ -119,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UploadProductData(product) {
+function UploadProductData(product,callback) {
   console.log(
     "submit ",
     product.title,
@@ -165,8 +165,7 @@ function UploadProductData(product) {
           UploadImg("ProductImg", (ref, "-", img.name), img)
         )
       )
-        .then((url) => {
-          console.log(`All success`, url);
+        .then((url) => {          
           return url;
         })
         .then((urls) => {
@@ -176,7 +175,7 @@ function UploadProductData(product) {
             seller: auth.currentUser.uid,
             title: product.title,
             peopleCountLimit: product.peopleCountLimit,
-            duration:product.duration,
+            duration: product.duration,
             openWeek: product.weekDays,
             county: product.county,
             town: product.town,
@@ -184,6 +183,8 @@ function UploadProductData(product) {
             thumbnail: thubnaimLink,
             bill: { data: product.billData, total: product.billTotal },
             discribe: product.discribe,
+            //預設評價:
+            rating:5,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           };
           //ref.set(newData);
@@ -203,9 +204,14 @@ function UploadProductData(product) {
           batch.update(statsRef, { count: increment });
           batch.commit();
         })
+        .then(()=>{
+          console.log(`All success`);
+          callback(true);
+        })
 
         .catch((error) => {
           console.log(`Some failed: `, error.message);
+          callback(false);
         });
     });
   /*
@@ -242,6 +248,7 @@ function CreateProduct() {
   const [billTotal, setBillTotal] = useState(0);
 
   const [isAuthed, setIsAuthed] = useState(true);
+  const [isCreateSuccess,setIsCreateSuccess]=useState();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -258,6 +265,7 @@ function CreateProduct() {
       billData,
       billTotal,
       discribe,
+      callback:{setIsCreateSuccess}
     });
   };
 
@@ -403,14 +411,13 @@ function CreateProduct() {
             elevation={3}
             onClick={() => {
               setIsAuthed(auth.currentUser != null);
-              console.log(isAuthed);
             }}
           >
             確認
           </Button>
         </div>
       </Grid>
-
+      {/* 創建失敗- 尚未登入 dia */}
       <FullScreenDialog
         isOpen={!isAuthed}
         title="創建失敗"
@@ -418,7 +425,29 @@ function CreateProduct() {
         buttonText="確認"
         closeCallback={() => {
           window.location.replace("/");
-        }}
+        }}        
+      />
+      {/* 創建失敗- ?
+      <FullScreenDialog
+        isOpen={!isCreateSuccess}
+        title="創建失敗"
+        content="上傳發生問題，請稍後再試"
+        buttonText="確認"
+        closeCallback={() => {
+          //window.location.replace("/");
+        }}        
+      /> */}
+
+      {/* 創建成功 dia */}
+      <FullScreenDialog
+        isOpen={isCreateSuccess}
+        title="創建成功"
+        content="商品創建成功"
+        buttonText="確認"
+        closeCallback={() => {
+          const userPath="/profile/"+auth?.currentUser.uid;
+          window.location.replace(userPath);
+        }}        
       />
     </Container>
   );

@@ -24,6 +24,8 @@ import { Pagination } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core";
 import TpiNewsFrame from "../Components/TpiNewsFrame";
 import { countyList } from "../utils/regionData";
+import HomeEventCarousel from "../Components/HomeEventBoard";
+import HomeAdsCarouse from "../Components/HomeAdsCarouse";
 
 const useStyles = makeStyles((theme) => ({
   home__container: {
@@ -34,12 +36,15 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   home__ad: {
-    height: "30vh",
+    //height: 400,
+    height: "100%",
     maxWidth: 1280,
     margin: "0 auto",
     textAlign: "center",
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
+    //overflow: "auto",
   },
   home__bodyContainer: {
     display: "flex",
@@ -77,11 +82,13 @@ const useStyles = makeStyles((theme) => ({
   home__broadCastContainer: {
     minWidth: "28%",
     minHeight: 500,
-    maxHeight: "50vh",
+    //maxHeight: "50vh",
     display: "flex",
-    //margin:"0 auto",
+    flexDirection:"column",
+    justifyContent:"center",
+    margin:"0 auto",
     [theme.breakpoints.down("sm")]: {
-      minWidth: 350
+      minWidth: 350,
     },
   },
 }));
@@ -142,12 +149,12 @@ function Home() {
       <Grid container spacing={3} className={classes.home__container}>
         {/* 廣告區 */}
         <Grid item xs={12}>
-          <Paper
-            className={classes.home__ad}
-            //style={webTheme.home.home__ad}
-          >
-            {/* TODO: 廣告幻燈片 */}
+          <Paper className={classes.home__ad}>
+            {/* <HomeEventCarousel /> */}
+            {/* TODO: 廣告幻燈片 
             <img src="https://p2.bahamut.com.tw/B/2KU/38/3c661803ce9a8b1918024d02f21di7e5.JPG" />
+            */}
+            <HomeAdsCarouse></HomeAdsCarouse>
           </Paper>
         </Grid>
 
@@ -190,7 +197,9 @@ function Home() {
 
           {/* 台北新訊息 推播 */}
           <Grid item className={classes.home__broadCastContainer}>
-            <TpiNewsFrame />
+            {/* <TpiNewsFrame />  */}
+            <Typography> 近期活動 </Typography>
+            <HomeEventCarousel />
           </Grid>
         </Grid>
 

@@ -38,7 +38,7 @@ function Header() {
           onClick={() => {
             history.push("/");
           }}
-          src="https://logos-world.net/wp-content/uploads/2020/12/Lays-Logo.png"
+          src="/liteTripper_logo.png" 
         ></img>
 
         {/* 搜尋 */}
