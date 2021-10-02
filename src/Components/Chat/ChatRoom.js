@@ -8,6 +8,10 @@ import { useParams } from "react-router";
 import { firestore } from "../../utils/firebase";
 import { getLoginData } from "../../utils/localStorge";
 
+import { getProductById } from "../../utils/ProductFuntion";
+
+import ProductCard from "./../ProductCard";
+import ChatDialog from "./ChatDialog";
 const useStyle = makeStyles((theme) => ({
   //TODO : 高度問題
   chatWindow: {
@@ -68,9 +72,9 @@ function ChatRoom({ handleDrawerToggle, drawerWidth }) {
       });
   };
 
-  useEffect(() => {
-    initChat();
-    getMessage();
+  useEffect(async () => {
+    await initChat();
+    await getMessage();
     setLoading(false);
   }, [chatId]);
 
@@ -78,7 +82,7 @@ function ChatRoom({ handleDrawerToggle, drawerWidth }) {
     return <div>loading...</div>;
   }
   return (
-    <div>
+    <Container>
       <ChatHeader
         reciverid={reciverid}
         drawerWidth={drawerWidth}
@@ -95,41 +99,43 @@ function ChatRoom({ handleDrawerToggle, drawerWidth }) {
       >
         <Paper className={classes.chatWindow}>
           <Container style={{ paddingTop: 5 }}>
-            {messages.map((message) => (
-              <ChatMsg
-                key={message.docid}
-                side={currentUid === message.id ? "right" : "left"}
-                avatar={message.photoURL}
-                messages={[message.text]}
-              />
-            ))}
+            {messages.map((message) => {
+              if (message?.type === "card")
+                return <ChatDialog message={message}></ChatDialog>;
+              else
+                return (
+                  <ChatMsg
+                    key={message.docid}
+                    side={currentUid === message.id ? "right" : "left"}
+                    avatar={message.photoURL}
+                    messages={[message.text]}
+                  />
+                );
+            })}
           </Container>
         </Paper>
       </Box>
       <Paper>
-        <ChatSubmit chatId={chatId} />
+        <ChatSubmit chatId={chatId} reciverid={reciverid} />
       </Paper>
-    </div>
+    </Container>
   );
 }
 
 export default ChatRoom;
 
-//商品卡片可以放入訊息
-//要寫個東西去抓當下那個人的所有商品
-//可以同商品頁面那個一起寫
-// <ChatMsg
-//   side={"right"}
-//   messages={[
-//     <ProductCard
-//       pid={product.pid}
-//       title={product.title}
-//       county={product.county}
-//       town={product.town}
-//       rating={product.rating}
-//       price={product.price}
-//       discribe={product.discribe}
-//       thumbnail={product.thumbnail}
-//     />,
-//   ]}
-// />;
+// return message?.type !== "card" ? (
+//   <ChatMsg
+//     key={message.docid}
+//     side={currentUid === message.id ? "right" : "left"}
+//     avatar={message.photoURL}
+//     messages={message.text}
+//   />
+// ) : (
+//   <ChatMsg
+//     key={message.docid}
+//     side={currentUid === message.id ? "right" : "left"}
+//     avatar={message.photoURL}
+//     messages={[<ProductCard snapshot={card}></ProductCard>]}
+//   />
+// );

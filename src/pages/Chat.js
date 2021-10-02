@@ -1,4 +1,4 @@
-import { Container, Drawer, Box } from "@material-ui/core";
+import { Container, Drawer, Box, Paper } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router";
 import ChatList from "../Components/Chat/ChatList";
@@ -27,6 +27,7 @@ export default function Chat(props) {
 
   const drawer = <ChatList userList={userList} chatList={chatList} />;
 
+  //TODO: 一樣放grid，sm時候不見 其他時候照舊
   //判斷是否有登入
   if (getLoginData() == null) {
     alert("請先登入");
@@ -57,6 +58,7 @@ export default function Chat(props) {
               handleDrawerToggle={handleDrawerToggle}
               drawerWidth={drawerWidth}
             />
+            <Paper />
           </Route>
           {/* 當沒有輸入聊天室id */}
           <Route exact path="/Chat/:chatId">
