@@ -1,0 +1,20 @@
+.root{
+    display:flex;
+    flex-direction: row;
+    height: 100%;
+}
+.leftContainer{
+    overflow-y: scroll;
+}
+
+.calendarContaier{
+    width: 300px;
+    margin: auto;
+}
+
+.cartContainer{
+
+}
+.cart{
+
+}

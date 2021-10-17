@@ -11,9 +11,11 @@ import {
   Button,
   ButtonGroup,
   IconButton,
+  CircularProgress,
 } from "@material-ui/core";
 import React, { useEffect, useState, useStyle } from "react";
 import { Link, useLocation } from "react-router-dom";
+import AnchorLink from "react-anchor-link-smooth-scroll";
 import ParallaxCarousel from "../Components/ParallaxCarousel";
 import { countyList, townCode2Name } from "../utils/regionData";
 import WeekdaySelect from "../Components/WeekdaySelect";
@@ -23,13 +25,19 @@ import {
   getProductState,
   getProductById,
 } from "../utils/ProductFuntion";
-import CalenderPicker from "../Components/CalenderPicker";
+import CalendarPicker from "../Components/CalendarPicker";
 import { Rating } from "@material-ui/lab";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { orange } from "@material-ui/core/colors";
 import MUIRichTextEditor from "mui-rte";
 import EditableTable from "../Components/EditableTable";
 import { auth } from "../utils/firebase";
+import { addToShoppingCart } from "../utils/userFunction";
+import FullScreenDialog from "../Components/FullScreenDialog";
+import zIndex from "@material-ui/core/styles/zIndex";
+import "../utils/reset.css";
+
+const today = new Date();
 
 const useStyles = makeStyles((theme) => ({
   mainContainer: {
@@ -37,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",
+    position: "absolute",
   },
   infoContainer: {
     width: "100%",
@@ -136,7 +145,7 @@ const useStyles = makeStyles((theme) => ({
   },
   bigButton: {
     height: 50,
-    width: "40%",
+    width: 150,
     fontSize: 20,
     color: "white",
   },
@@ -172,6 +181,20 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     backgroundColor: orange[100],
   },
+
+  /**Loading bar */
+  loadingContainer: {
+    position: "absolute",
+    height: "100%",
+    width: "100%",
+    backgroundColor: "#191919A5",
+    zIndex: 99,
+    display: "flex",
+    borderRadius: "5px",
+  },
+  loadingCircular: {
+    margin: "auto",
+  },
 }));
 
 function Product() {
@@ -192,7 +215,20 @@ function Product() {
       total: 0,
     },
   });
+  const [orderData, setOrderData] = useState({
+    quantity: 1,
+    startDate: null,
+    endDate:null,
+  });
   const [orderCount, setOrderCount] = useState(1);
+  const [alert, setAlert] = useState({
+    isLoading: false,
+    isShow: false,
+    title: "",
+    content: "",
+    buttonText: "",
+    closeCallback: null,
+  });
 
   const columns = React.useMemo(() => [
     {
@@ -205,12 +241,18 @@ function Product() {
     },
   ]);
 
+  //設定 購買人數
   function handleOrderCount(opt) {
     var newCount = Math.min(
-      Math.max(orderCount + opt, 1),
+      Math.max(orderData.quantity + opt, 1),
       data?.peopleCountLimit
     );
-    setOrderCount(newCount);
+    //setOrderCount(newCount);
+    setOrderData((old) => {
+      let update = Object.assign({}, old);
+      update.quantity = newCount;
+      return  update ;
+    })
   }
 
   useEffect(() => {
@@ -240,9 +282,9 @@ function Product() {
     //解析區域代號
     townCode2Name(data.county, data.town, setTown);
   }, [region]);
-
+  
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <Grid container className={classes.mainContainer}>
         <Grid
           item
@@ -320,7 +362,7 @@ function Product() {
                   -
                 </Button>
                 <Typography className={classes.info__number}>
-                  {orderCount}
+                  {orderData.quantity}
                 </Typography>
                 <Button
                   variant="contained"
@@ -367,16 +409,71 @@ function Product() {
               style={{ position: "relative", height: "100%" }}
             >
               {/* 價格 | 按鈕 */}
-              <div className={classes.buttonGroup}>
+              <div className={classes.buttonGroup} id="buttonGroup">
                 <Typography className={classes.priceText} color="primary">
                   {currencyFormat(data?.bill?.total * orderCount)}
                 </Typography>
-
                 <Button
                   variant="contained"
                   color="primary"
                   className={classes.bigButton}
+                  onClick={
+                    auth.currentUser && orderData.startDate
+                      ? () => {
+                          //購買
+                          setAlert({ isLoading: true }); //讀條
+
+                          addToShoppingCart(
+                            auth.currentUser.uid,
+                            pid,
+                            orderData
+                          )
+                            .then(() => {
+                              setAlert({
+                                isLoading: false,
+                                isShow: true,
+                                title: "購買成功",
+                                content: "",
+                                buttonText: "確認",
+                                closeCallback: () => {},
+                              });
+                            })
+                            .catch((err) => {
+                              console.log(err);
+                              setAlert({
+                                isLoading: false,
+                                isShow: true,
+                                title: "購買失敗",
+                                content: "發生不明原因，請稍後再試",
+                                buttonText: "確認",
+                                closeCallback: () => {},
+                              });
+                            });
+                        }
+                      : () => {
+                          console.log(orderData.startDate);
+                          //沒有登入
+                          if (!auth.currentUser) {
+                            window.location.href = "/signIn";
+                          }
+                          if (!orderData.startDate)
+                            window.location.hash = "#calendar";
+                        }
+                  }
                 >
+                  {/* 讀取畫面 */}
+                  <div
+                    className={classes.loadingContainer}
+                    style={
+                      alert.isLoading
+                        ? { display: "block" }
+                        : { display: "none" }
+                    }
+                  >
+                    <CircularProgress
+                      className={classes.loadingCircular}
+                    ></CircularProgress>
+                  </div>
                   購買
                 </Button>
               </div>
@@ -400,7 +497,7 @@ function Product() {
             </div>
           </Grid>
         </Grid>
-        
+
         <DividerWithText>介紹</DividerWithText>
         {/* 介紹 */}
         <Grid item container className={classes.discribtionContainer}>
@@ -438,15 +535,40 @@ function Product() {
             })}
           />
         </Grid>
-      
+
         <DividerWithText>選擇出遊日</DividerWithText>
-        <Grid item>
-          
+        <Grid item className={classes.tableContainer} id="calendar">
+          <CalendarPicker
+            duration={data.duration}
+            year={today.getFullYear()}
+            month={today.getMonth()}
+            onSelectCallback={(e) =>
+              setOrderData((old) => {
+                let update = Object.assign({}, old);  
+                update.startDate = e.date;                
+                return update;
+              })
+            }
+          ></CalendarPicker>
         </Grid>
 
         <DividerWithText>留言</DividerWithText>
-      
       </Grid>
+
+      {/* 購買成功- */}
+      <FullScreenDialog
+        isOpen={alert.isShow}
+        title={alert.title}
+        content={alert.content}
+        buttonText={alert.buttonText}
+        closeCallback={() => {
+          //setShowAlert(false);
+          setAlert({ isShow: false });
+          if (alert.closeCallback) {
+            alert.closeCallback();
+          }
+        }}
+      />
     </div>
   );
 }

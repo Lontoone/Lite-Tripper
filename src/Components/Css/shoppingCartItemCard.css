@@ -1,0 +1,63 @@
+.root {
+  width: 80%;
+  height: 200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid gray;
+}
+.mediaContainer {
+  width: 30%;
+  height: 80%;
+  margin: auto;
+  overflow: hidden;  
+}
+.mediaContainer img{
+  margin: auto;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.infoContainer {
+  width: 40%;
+  height: 80%;
+  margin: auto;
+}
+
+.info-text-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 15px;
+}
+.info-title{
+    font-size: 1.25em;
+    font-weight: 900;
+
+}
+.info-text {
+  font-size: 0.8em;
+
+}
+
+.info-money{
+    font-weight: 700;
+    font-size: 1.5em;
+    color: chocolate;
+}
+
+.actionContainer {
+  width: 20%;
+  height: 80%;
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;  
+
+}
+
+

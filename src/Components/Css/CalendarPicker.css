@@ -1,0 +1,82 @@
+
+
+.cp__root{
+  width:350px;
+  margin: auto;
+}
+
+.cp__table {
+  border: none;
+  border-collapse: collapse;
+  background-color: #f9f9f9;
+}
+.cp__header {
+  height: 25px;
+  width: 50px;
+}
+.cp__header-tr {
+  background-color: rgb(241, 136, 87);
+}
+.cp__tr {
+  height: 50px;
+  background-color: #f9f9f9;
+}
+.cp__date-td {
+  text-align: center;
+  width: 25px;
+  margin: 5px;  
+  cursor: pointer;
+}
+.cp__passedDate {
+  text-align: center;
+  background-color: #c5c5c5;
+  width: 25px;
+  margin: 5px;
+}
+.cp__date-td:hover {
+  background-color: rgb(241, 87, 87);
+  color: #f9f9f9;
+  cursor: pointer;
+}
+
+.cp_selected {
+  text-align: center;
+  background-color: rgb(241, 87, 87);
+  border-radius: 50%;
+  color: #f9f9f9;
+}
+
+.cp__selectStart{
+  background-color: rgb(241, 87, 87);
+  border-radius: 50% 0 0 50%;
+}
+.cp__selectEnd{
+  background-color: rgb(241, 87, 87);
+  border-radius: 0 50% 50% 0;
+}
+.cp__included{
+  background-color: rgb(241, 87, 87);
+}
+
+
+.monthTitleContainer{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+
+.monthTitleContainer *{
+  margin: 5px;
+  
+}
+
+.monthButton{
+  width: 25px;
+  height: 25px;
+  border: none;
+  background-color:rgb(241, 87, 87);
+  border-radius: 5px;
+  color: aliceblue;
+  cursor: pointer;
+}

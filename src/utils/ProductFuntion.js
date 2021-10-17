@@ -28,7 +28,7 @@ async function getProductState() {
     });
 }
 
-function getProductById(pid) {
+function getProductById(pid) {  
   let query = firestore.collection("product").doc(pid);
   return query.get().then().catch();
 }
@@ -58,9 +58,14 @@ function getQueryByOption(collection, options = {}) {
   return query.get().then().catch();
 }
 
+function currencyFormat(num) {
+  return "$" + num?.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+}
+
 export {
   getAllProductsList,
   getProductState,
   getQueryByOption,
   getProductById,
+  currencyFormat,
 };

@@ -13,6 +13,8 @@ import ProfileEdit from "./pages/ProfileEdit";
 import CreateProduct from "./pages/CreateProduct";
 import ChatRoom from "./Components/Chat/ChatRoom";
 import Product from "./pages/Product";
+import MyTest from "./pages/myTest";
+import ShoppingCart from "./pages/ShoppingCart";
 
 function App() {
   return (
@@ -48,10 +50,21 @@ function App() {
             </Layout>
           </Route>
           <Route exact path="/Product">
-          <Layout>
+            <Layout>
               <Product />
             </Layout>
           </Route>
+          <Route exact path="/test1">
+            <MyTest></MyTest>
+          </Route>
+
+          {/* 購物車 */}
+          <Route exact path="/ShoppingCart/:uid">
+            <Layout>
+              <ShoppingCart></ShoppingCart>
+            </Layout>
+          </Route>
+
           {/*若輸入其他網址會導入noFound頁面 */}
           <Route path="/*">
             <NoFoundPage />

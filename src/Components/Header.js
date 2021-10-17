@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Avatar,
+  Badge,
   Button,
   Container,
   IconButton,
@@ -20,12 +21,30 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
 import { useHistory } from "react-router";
+import { getShoppingCart, getUserData } from "../utils/userFunction";
 
 function Header() {
   const classes = webTheme();
   //授權hook
   const [user, authLoading, error] = useAuthState(auth);
+  const [userData, setUserDate] = useState({});
+  const [shoppingCart, setShoppingCart] = useState([]);
   const history = useHistory();
+
+  useEffect(() => {
+    getUserData(user?.uid).then((data) => {
+      setUserDate(data.data());
+    });
+
+    //購物車
+    getShoppingCart(user?.uid)
+      .then((snap) => {
+        console.log(snap.data());
+        setShoppingCart(snap.data()?.shoppingCart);
+      })
+      .catch((err) => console.log(err));
+  }, [user]);
+
   if (authLoading) {
     return <div></div>;
   }
@@ -38,7 +57,7 @@ function Header() {
           onClick={() => {
             history.push("/");
           }}
-          src="/liteTripper_logo.png" 
+          src="/liteTripper_logo.png"
         ></img>
 
         {/* 搜尋 */}
@@ -70,8 +89,10 @@ function Header() {
           </IconButton>
 
           {/* 購物車 */}
-          <IconButton>
-            <LocalMallIcon />
+          <IconButton component="a" href={"/ShoppingCart/"+user?.uid}>
+            <Badge badgeContent={shoppingCart? shoppingCart.length:0} color="secondary">
+              <LocalMallIcon />
+            </Badge>
           </IconButton>
           {/* 用戶頭相 */}
           <IconButton

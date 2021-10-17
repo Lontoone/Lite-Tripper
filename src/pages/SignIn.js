@@ -78,6 +78,8 @@ function SignIn() {
             photoURL: user.photoURL,
             verification: false,
             introduction: "暫無介紹",
+            shoppingCart:[],
+            products:[],
           });
           History.push("/profile/" + user.id);
           return;
