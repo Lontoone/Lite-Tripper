@@ -1,20 +1,30 @@
-.root{
+.shopping-cart-root{
     display:flex;
     flex-direction: row;
     height: 100%;
+    width: 100%;
 }
 .leftContainer{
-    overflow-y: scroll;
+    overflow-y: auto;
+    height: 80vh;
+    width: 100%;
 }
 
 .calendarContaier{
-    width: 300px;
+    min-width: 400px;
     margin: auto;
 }
 
 .cartContainer{
-
+    width: 100%;
 }
 .cart{
 
+}
+
+
+@media only screen and (max-width: 900px) {
+    .shopping-cart-root{
+        flex-direction: column;
+    }
 }

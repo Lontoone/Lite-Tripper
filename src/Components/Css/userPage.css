@@ -1,0 +1,53 @@
+/* 報廢 */
+.tabContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+.tabList {
+  position: absolute;
+  top: 10px;
+  /*
+  display: flex;
+  flex-direction: column;
+  left: 0;*/
+}
+
+.tab {
+  list-style-type: none;
+  height: 50px;
+  width: 100px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 10px 0;
+
+  border-radius: 0 15px 15px 0;
+  background-color: #ff9800;
+}
+
+.react-tabs__tab--selected {
+  width: 150px;
+  color: aliceblue;
+}
+
+.tabPanlesContainer {
+  width: 80%;
+  min-height: 100vh;
+  height: 100%;
+  margin: auto;
+  background-color: aqua;
+}
+
+.full-ifram {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  object-fit: contain;
+  border: none;
+}

@@ -218,9 +218,13 @@ function Product() {
   const [orderData, setOrderData] = useState({
     quantity: 1,
     startDate: null,
-    endDate:null,
+    endDate: null,
+    duration:1,
+    /*
+    price:1,
+    seller:null,
+    buyer:null,*/
   });
-  const [orderCount, setOrderCount] = useState(1);
   const [alert, setAlert] = useState({
     isLoading: false,
     isShow: false,
@@ -251,8 +255,8 @@ function Product() {
     setOrderData((old) => {
       let update = Object.assign({}, old);
       update.quantity = newCount;
-      return  update ;
-    })
+      return update;
+    });
   }
 
   useEffect(() => {
@@ -261,6 +265,13 @@ function Product() {
       .then((e) => {
         console.log(e.data());
         setData(e.data());
+
+        //設定必要商品資料
+        setOrderData((old) => {
+          let update = Object.assign({}, old);
+          update.duration = e.data().duration;
+          return update;
+        });
       })
       .then(
         //城市清單
@@ -282,7 +293,7 @@ function Product() {
     //解析區域代號
     townCode2Name(data.county, data.town, setTown);
   }, [region]);
-  
+
   return (
     <div style={{ position: "relative" }}>
       <Grid container className={classes.mainContainer}>
@@ -411,7 +422,7 @@ function Product() {
               {/* 價格 | 按鈕 */}
               <div className={classes.buttonGroup} id="buttonGroup">
                 <Typography className={classes.priceText} color="primary">
-                  {currencyFormat(data?.bill?.total * orderCount)}
+                  {currencyFormat(data?.bill?.total * orderData.quantity)}
                 </Typography>
                 <Button
                   variant="contained"
@@ -544,8 +555,8 @@ function Product() {
             month={today.getMonth()}
             onSelectCallback={(e) =>
               setOrderData((old) => {
-                let update = Object.assign({}, old);  
-                update.startDate = e.date;                
+                let update = Object.assign({}, old);
+                update.startDate = e.date;
                 return update;
               })
             }

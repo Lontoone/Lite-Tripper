@@ -97,7 +97,9 @@ function Header() {
           {/* 用戶頭相 */}
           <IconButton
             onClick={() => {
-              history.push("/profile/" + user?.uid);
+              user?
+              history.push("/user/" + user?.uid):
+              history.push("/signIn")
             }}
             edge="end"
           >

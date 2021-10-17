@@ -1,24 +1,99 @@
 import { Button } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { firebase, firestore } from "../utils/firebase";
-import { currencyFormat, getProductById } from "../utils/ProductFuntion";
+import {
+  createOrder,
+  currencyFormat,
+  getProductById,
+} from "../utils/ProductFuntion";
 import {
   getUserData,
+  parseState,
   removeFromShoppingCart,
-  createOrder,
+  setOrderState,
 } from "../utils/userFunction";
 import "./Css/shoppingCartItemCard.css";
 import FullScreenDialog from "../Components/FullScreenDialog";
 
-function ShoppingCartItemCard({ _pid, _orderData, _infoPairs, _actions }) {
-  const [pid, setPid] = useState(_pid);
+function InProgressCard({
+  _orderId,
+  _orderData,
+  _infoPairs,
+  _actions,
+  isSeller,
+}) {
   const [productData, setProductData] = useState({});
   const [orderData, setOrderDate] = useState(_orderData);
   const [infos, setInfos] = useState(_infoPairs);
   const [actins, setActions] = useState(_actions);
-  const [sellerData, setSellerData] = useState({});
+  const [targetUser, setTargetUser] = useState({});
 
   const [isBusy, setIsBusy] = useState(true);
+
+  const getActionsByState = (target, state) => {
+    if (target == "buyer") {
+      if (state == "created") {
+        return buyer_CreatedActions();
+      }
+    }
+    //賣方方法
+    else {
+      if (state == "created") {
+        return seller_CreatedActions();
+      }
+    }
+  };
+
+  //買家: 成立的訂單
+  const buyer_CreatedActions = () => {
+    return (
+      <>
+        <Button
+          color="disabled"
+          variant="contained"
+          onClick={() => {
+            //TODO:檢查日期，結束後才能完成
+          }}
+        >
+          完成
+        </Button>
+      </>
+    );
+  };
+
+  //賣家: 新訂單
+  const seller_CreatedActions = () => {
+    return (
+      <>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            setOrderState(_orderId, "confirmed").then(() => {
+              window.location.reload();
+            });
+          }}
+        >
+          接受
+        </Button>
+        <Button
+          color="disabled"
+          variant="contained"
+          onClick={() => {
+            setOrderState(_orderId, "denied");
+            window.location.reload();
+          }}
+        >
+          拒絕
+        </Button>
+      </>
+    );
+  };
+
+  //賣家: 進行中
+  const seller_InProgressActions = () => {
+    return <></>;
+  };
 
   //通知popUp
   const [alert, setAlert] = useState({
@@ -31,13 +106,9 @@ function ShoppingCartItemCard({ _pid, _orderData, _infoPairs, _actions }) {
   });
 
   useEffect(() => {
-    //設定pid初始
-    setPid(_pid);
-  }, [_pid]);
-
-  useEffect(() => {
-    //購物車資料
+    //訂單資料
     setOrderDate(_orderData);
+    console.log(_orderData);
   }, [_orderData]);
 
   useEffect(() => {
@@ -52,31 +123,32 @@ function ShoppingCartItemCard({ _pid, _orderData, _infoPairs, _actions }) {
 
   useEffect(() => {
     //取得商品資料
-    if (pid == "") {
-      console.log("pid return " + pid);
+    if (_orderData.pid == "") {
+      //console.log("pid return " + pid);
       return;
     }
-    getProductById(pid)
+    getProductById(_orderData.pid)
       .then((res) => {
         console.log(res);
         setProductData(res.data());
         return res.data();
       })
       .then((pData) => {
-        //取得賣家
-        console.log(pData);
-        getUserData(pData.seller).then((res) => {
-          setSellerData(res.data());
-        });
+        //取得對方用戶
+        getUserData(isSeller ? orderData.buyer : orderData.seller).then(
+          (res) => {
+            setTargetUser(res.data());
+          }
+        );
       })
       .then(setIsBusy(false));
-  }, [pid, orderData]);
+  }, [orderData]);
 
   if (isBusy) {
     return <>Loading</>;
   } else
     return (
-      <div className="root" key={pid}>
+      <div className="root" key={_orderId}>
         {/* 圖片 */}
         <div className="mediaContainer">
           <img src={productData?.thumbnail} />
@@ -96,12 +168,12 @@ function ShoppingCartItemCard({ _pid, _orderData, _infoPairs, _actions }) {
 
           <div className="info-text-container">
             <div className="info-text">編號</div>
-            <div className="info-text">{pid}</div>
+            <div className="info-text">{_orderId}</div>
           </div>
 
           <div className="info-text-container">
-            <div className="info-text">賣家</div>
-            <div className="info-text">{sellerData?.name}</div>
+            <div className="info-text">{isSeller ? "買家" : "賣家"}</div>
+            <div className="info-text">{targetUser?.name}</div>
           </div>
 
           <div className="info-text-container">
@@ -109,6 +181,16 @@ function ShoppingCartItemCard({ _pid, _orderData, _infoPairs, _actions }) {
             <div className="info-text">
               {secToDate(_orderData.startDate?.seconds)}
             </div>
+          </div>
+
+          <div className="info-text-container">
+            <div className="info-text">狀態</div>
+            <div className="info-text">{parseState(_orderData.state)}</div>
+          </div>
+
+          <div className="info-text-container">
+            <div className="info-text"></div>
+            <div className="info-text">{_orderData.paid?"已付款":"未付款"}</div>
           </div>
 
           <div className="info-text-container">
@@ -121,55 +203,13 @@ function ShoppingCartItemCard({ _pid, _orderData, _infoPairs, _actions }) {
 
         {/* 方法 */}
         <div className="actionContainer">
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              createOrder(pid, orderData, productData)
-                .then((suceess) => {
-                  console.log("odder 成功");
-                  setAlert({
-                    isLoading: false,
-                    isShow: true,
-                    title: "購買成功",
-                    content: "",
-                    buttonText: "確認",
-                    closeCallback: () => {
-                      window.location.reload();
-                    },
-                  });
-                })
-                .catch((err) => {
-                  console.log(err);
-                  setAlert({
-                    isLoading: false,
-                    isShow: true,
-                    title: "購買失敗",
-                    content: "發生不明原因，請稍後再試",
-                    buttonText: "確認",
-                    closeCallback: () => {},
-                  });
-                });
-            }}
-          >
-            購買
-          </Button>
-
-          <Button
-            color="disabled"
-            variant="contained"
-            onClick={() => {
-              removeFromShoppingCart(orderData)
-                .then(() => {
-                  window.location.reload();
-                })
-                .catch(() => {
-                  console.log("removed");
-                });
-            }}
-          >
-            取消
-          </Button>
+          {isSeller ? (
+            //賣家方法
+            <>{getActionsByState("seller", _orderData.state)}</>
+          ) : (
+            //買家方法
+            <>{getActionsByState("buyer", _orderData.state)}</>
+          )}
         </div>
 
         <FullScreenDialog
@@ -195,4 +235,4 @@ const secToDate = (sec) => {
   return curdate.toLocaleDateString(navigator.language);
 };
 
-export default ShoppingCartItemCard;
+export default InProgressCard;

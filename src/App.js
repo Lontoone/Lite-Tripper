@@ -15,6 +15,8 @@ import ChatRoom from "./Components/Chat/ChatRoom";
 import Product from "./pages/Product";
 import MyTest from "./pages/myTest";
 import ShoppingCart from "./pages/ShoppingCart";
+import UserPage from "./pages/UserPage";
+import SellerPage from "./pages/SellerPage";
 
 function App() {
   return (
@@ -31,6 +33,20 @@ function App() {
           <Route exact path="/signIn">
             <SignIn />
           </Route>
+          {/*個人頁面 (新)*/}
+          <Route exact path="/user/:uid">
+            <Layout>
+              <UserPage />
+            </Layout>
+          </Route>
+
+          {/*賣家後台*/}
+          <Route exact path="/seller/:uid">
+            <Layout>
+              <SellerPage />
+            </Layout>
+          </Route>
+
           {/*個人頁面*/}
           <Route exact path="/Profile/:uid">
             <Layout>
@@ -49,11 +65,21 @@ function App() {
               <CreateProduct />
             </Layout>
           </Route>
+          {/* 商品頁面 */}
           <Route exact path="/Product">
             <Layout>
               <Product />
             </Layout>
           </Route>
+
+          {/* //TODO:付款頁面 
+          <Route path="/payment">          
+            <Elements stripe={promise}>
+              <Payment />
+            </Elements>
+          </Route>
+          */}
+
           <Route exact path="/test1">
             <MyTest></MyTest>
           </Route>

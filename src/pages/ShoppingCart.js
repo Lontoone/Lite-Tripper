@@ -13,10 +13,11 @@ import ShoppingCartItemCard from "../Components/ShoppingCartItemCard";
 import { auth } from "../utils/firebase";
 import { getShoppingCart } from "../utils/userFunction";
 
-import CalendarPicker from "../Components/CalendarPicker";
 import "../Components/Css/ShoppingCart.css";
 import ReadonlyCalendar from "../Components/ReadonlyCalendar";
 import DividerWithText from "../Components/DividerWithText";
+//import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 
 function ShoppingCart() {
   //網址參數
@@ -27,6 +28,8 @@ function ShoppingCart() {
   const [cart, setCart] = useState([{ pid: "" }]);
 
   const [isbusy, setIsBusy] = useState(true);
+
+
   useEffect(() => {
     //讀取購物車
     getShoppingCart(uid)
@@ -46,7 +49,7 @@ function ShoppingCart() {
             //加入開始日與期間長度
             var _data = {
               startDate: start,
-              duration: data.shoppingCart[i].quantity,
+              duration: data.shoppingCart[i].duration,
             };
             _temp.push(_data);
           }
@@ -66,53 +69,26 @@ function ShoppingCart() {
     return <></>;
   } else
     return (
-      <div className="root">
+      <div className="shopping-cart-root">
+        {/* 日曆 */}
+        <div className="calendarContaier">
+          <ReadonlyCalendar readonly={true} datas={dates}></ReadonlyCalendar>
+        </div>
+        {/* 購物車 */}
+        <DividerWithText>購物車</DividerWithText>
         <div className="leftContainer">
-          {/* 購物車 */}
-          <DividerWithText>購物車</DividerWithText>
           <div className="cartContainer">
-            <Container className="cart">
+            <div className="cart">
               {cart &&
                 cart.map((item) => (
                   <ShoppingCartItemCard
                     _pid={item.pid}
                     _orderData={item}
-                    按鈕
-                    _actions={[
-                      {
-                        color: "primary",
-                        onClick: () => {
-                          console.log("pp");
-                        },
-                        text: "購買",
-                      },
-                      {
-                        color: "disable",
-                        onClick: () => {
-                          console.log("pp");
-                        },
-                        text: "取消",
-                      },
-                    ]}
-
-                    /* 補充資料
-            _infoPairs={[
-              { key: "測試", value: "123" },
-            ]}*/
                   ></ShoppingCartItemCard>
                 ))}
-            </Container>
+            </div>
           </div>
-
-          {/* 已購買 */}
-          <DividerWithText>已購買</DividerWithText>
-          
-
         </div>
-        {/* 日曆 */}
-        <Container className="calendarContaier">
-          <ReadonlyCalendar readonly={true} datas={dates}></ReadonlyCalendar>
-        </Container>
       </div>
     );
 }
