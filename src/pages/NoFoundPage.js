@@ -1,11 +1,4 @@
-import {
-  Button,
-  Card,
-  Container,
-  makeStyles,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { Button, Card, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
 const useStyle = makeStyles((theme) => {

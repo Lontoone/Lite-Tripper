@@ -14,11 +14,10 @@ import {
 } from "@material-ui/core";
 //react
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams, Link, TO } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import SignOutBtn from "../Components/SignoutBtn";
 //firebase
-import { firestore, auth } from "../utils/firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { firestore } from "../utils/firebase";
 //page
 import ShopTab from "../Components/ShopTab";
 import MessageBoard from "../Components/MessageBoard/MessageBoard";
@@ -127,7 +126,7 @@ function Profile() {
           </Grid>
           {/*操作按鈕 */}
           <Grid xs={4} item>
-            {currentUid == uid ? (
+            {currentUid === uid ? (
               <>
                 <ProfileEdit getUserData={getUserData} userData={userData} />
                 <SignOutBtn />

@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Button,
-  Container,
   CssBaseline,
   Grid,
   makeStyles,
@@ -110,7 +109,7 @@ function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            startIcon={<img src="/GoogleLogo.png" />}
+            startIcon={<img src="/GoogleLogo.png" alt="G" />}
           >
             Sign In With Google
           </Button>

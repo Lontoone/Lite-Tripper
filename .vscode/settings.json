@@ -1,3 +1,6 @@
 {
-  "tabout.disableByDefault": true
+  "tabout.disableByDefault": true,
+  "osumode.enabled": true,
+  "osumode.enableComboCounter": true,
+  "osumode.enableCursorExplosions": true
 }

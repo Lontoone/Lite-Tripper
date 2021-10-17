@@ -38,9 +38,9 @@ export function useGetChatList(senderUid) {
       .onSnapshot((chats) => {
         const userlist = [];
         const chatlist = [];
-        chats.forEach((chat, index) => {
+        chats.forEach((chat) => {
           chatlist.push(chat.id);
-          userlist.push(chat.data().users.find((user) => user != senderUid));
+          userlist.push(chat.data().users.find((user) => user !== senderUid));
         });
         console.log("用戶列表", userlist);
         console.log("聊天室列表", chatlist);

@@ -21,16 +21,6 @@ const useStyle = makeStyles((theme) => ({
     background: pink[300],
   },
   list: {
-    [theme.breakpoints.down("sm")]: {
-      borderWidth: 1,
-      borderColor: blue[500],
-      width: "100%",
-      backgroundColor: theme.palette.background.paper,
-      position: "relative",
-      overflow: "auto",
-      maxHeight: 100,
-    },
-
     borderWidth: 1,
     borderColor: blue[500],
     width: "100%",
