@@ -151,24 +151,8 @@ function createOrder(pid, orderData, productData) {
   return batch.commit();
 }
 
-//取得新訂單
-async function getNewOrders(uid) {
-  return await firestore
-    .collection("orders")
-    .where("buyer", "==", uid)
-    .where("state", "in", ["created"])
-    .get();
-}
-//取得進行中訂單
-async function getInProgressOrders(uid) {
-  return await firestore
-    .collection("orders")
-    .where("buyer", "==", uid)
-    .where("state", "in", ["confirmed"])
-    .get();
-}
-//
-async function getOrdersByState(uid,state) {
+//取得訂單狀況
+async function getOrdersByState(uid, state) {
   return await firestore
     .collection("orders")
     .where("buyer", "==", uid)
@@ -176,12 +160,61 @@ async function getOrdersByState(uid,state) {
     .get();
 }
 
-//些改訂單state狀況
+//修改訂單state狀況
 async function setOrderState(orderId, state) {
   return await firestore
     .collection("orders")
     .doc(orderId)
     .update({ state: state });
+}
+
+//設定商品評價
+async function completeOrdersWithComments(pid, orderId, uid, rating, msg) {
+  var orderRef = firestore.collection("orders").doc(orderId);
+  const batch = firestore.batch();
+
+  //更新訂單狀況為"已評價"
+  batch.update(orderRef, { state: "rated" });
+
+  //上傳評價
+  var productRef = firestore.collection("productComments").doc(pid);
+  //該商品評價數量
+  const increment = firebase.firestore.FieldValue.increment(1);
+  batch.set(productRef, { count: increment }, { merge: true });
+
+  //上傳內容
+  var commentRef = firestore
+    .collection("productComments")
+    .doc(pid)
+    .collection("comments")
+    .doc(orderId);
+  var msgData = {
+    oid:orderId,
+    rating: rating,
+    msg: msg,
+    uid: uid,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+  };
+  batch.set(commentRef, msgData);
+
+  return await batch.commit();
+}
+
+//取得該商品所有評價
+async function getRatingComments(pid) {
+  return await firestore
+    .collection("productComments")
+    .doc(pid)
+    .collection("comments")
+    .get();
+}
+async function getOrderRatingComment(pid, oid) {
+  return await firestore
+    .collection("productComments")
+    .doc(pid)
+    .collection("comments")
+    .doc(oid)
+    .get();
 }
 
 function parseState(stateCode) {
@@ -205,9 +238,11 @@ export {
   getUserData,
   getShoppingCart,
   removeFromShoppingCart,
-  getInProgressOrders,
   createOrder,
   setOrderState,
   parseState,
   getOrdersByState,
+  completeOrdersWithComments,
+  getRatingComments,
+  getOrderRatingComment,
 };

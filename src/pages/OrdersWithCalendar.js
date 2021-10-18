@@ -15,7 +15,7 @@ import { Typography } from "@material-ui/core";
 
 
 */
-function OrdersWithCalendar({ isSeller, state }) {
+function OrdersWithCalendar({ isSeller, state,showCalendar=true }) {
   const [dates, setDates] = useState([]);
   const [orders, setOrders] = useState([{ pid: "" }]);
 
@@ -65,7 +65,7 @@ function OrdersWithCalendar({ isSeller, state }) {
         {orders.length > 0 ? (
           <>
             {/* 日曆 */}
-            <div className="calendarContaier">
+            <div className="calendarContaier" style={showCalendar?{}:{display:"none"}}>
               <ReadonlyCalendar
                 readonly={true}
                 datas={dates}

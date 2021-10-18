@@ -79,7 +79,8 @@ function UserPage() {
             <TabPanel value={tabValue} index={3}>
               <OrdersWithCalendar
                 isSeller={false}
-                state={["finished"]}
+                state={["finished"]}                
+                showCalendar={false}
               ></OrdersWithCalendar>
             </TabPanel>
 
@@ -88,6 +89,7 @@ function UserPage() {
               <OrdersWithCalendar
                 isSeller={false}
                 state={["rated"]}
+                showCalendar={false}
               ></OrdersWithCalendar>
             </TabPanel>
           </>

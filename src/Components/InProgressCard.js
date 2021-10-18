@@ -1,12 +1,15 @@
-import { Button } from "@material-ui/core";
+import { Avatar, Button, TextField } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
-import { firebase, firestore } from "../utils/firebase";
+import { auth, firebase, firestore } from "../utils/firebase";
 import {
   createOrder,
   currencyFormat,
   getProductById,
 } from "../utils/ProductFuntion";
 import {
+  completeOrdersWithComments,
+  getRatingComments,
+  getOrderRatingComment,
   getUserData,
   parseState,
   removeFromShoppingCart,
@@ -14,6 +17,7 @@ import {
 } from "../utils/userFunction";
 import "./Css/shoppingCartItemCard.css";
 import FullScreenDialog from "../Components/FullScreenDialog";
+import { Rating } from "@material-ui/lab";
 
 function InProgressCard({
   _orderId,
@@ -27,13 +31,27 @@ function InProgressCard({
   const [infos, setInfos] = useState(_infoPairs);
   const [actins, setActions] = useState(_actions);
   const [targetUser, setTargetUser] = useState({});
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
 
   const [isBusy, setIsBusy] = useState(true);
 
   const getActionsByState = (target, state) => {
     if (target == "buyer") {
       if (state == "created") {
-        return buyer_CreatedActions();
+        return buyer__CreatedActions();
+      }
+      //
+      else if (state == "confirmed") {
+        return buyer_FinishActions();
+      }
+      //
+      else if (state == "finished") {
+        return buyer_RateActions();
+      }
+      //
+      else if (state == "rated") {
+        return readOnlyRating();
       }
     }
     //賣方方法
@@ -41,22 +59,168 @@ function InProgressCard({
       if (state == "created") {
         return seller_CreatedActions();
       }
+      //
+      else if (state == "confirmed") {
+        return <>行程未結束</>;
+      }
+      //
+      else if (state == "finished") {
+        return <>未評價</>;
+      }
+      //
+      else if (state == "rated") {
+        return readOnlyRating();
+      }
     }
   };
 
+  //買家: 創立、待確認的訂單
+  const buyer__CreatedActions = () => {
+    return <></>;
+  };
   //買家: 成立的訂單
-  const buyer_CreatedActions = () => {
+  const buyer_FinishActions = () => {
+    console.log(orderData);
+    console.log(
+      orderData.title +
+        " " +
+        firebase.firestore.Timestamp.now().seconds +
+        " vs " +
+        orderData.endDate.seconds
+    );
     return (
       <>
         <Button
-          color="disabled"
+          color={
+            firebase.firestore.Timestamp.now().seconds >
+            orderData.endDate.seconds
+              ? "primary"
+              : "disabled"
+          }
           variant="contained"
           onClick={() => {
-            //TODO:檢查日期，結束後才能完成
+            //檢查日期，結束後才能完成
+            if (
+              firebase.firestore.Timestamp.now().seconds >
+              orderData.endDate.seconds
+            ) {
+              console.log("已過期");
+              setOrderState(_orderId, "finished").then((res) => {
+                setAlert({
+                  isLoading: false,
+                  isShow: true,
+                  title: "完成行程!",
+                  content: "請記得給辛苦的導遊評價哦!",
+                  buttonText: "確認",
+                  closeCallback: () => {
+                    window.location.reload();
+                  },
+                });
+              });
+            } else {
+              console.log("未過期");
+              setAlert({
+                isLoading: false,
+                isShow: true,
+                title: "行程尚未完成!",
+                content: "請待行程結束後再完成",
+                buttonText: "確認",
+                closeCallback: null,
+              });
+            }
           }}
         >
           完成
         </Button>
+      </>
+    );
+  };
+
+  //買家: 評價功能
+  const buyer_RateActions = () => {
+    return (
+      <>
+        <Rating
+          value={rating}
+          onChange={(event, newValue) => {
+            setRating(newValue);
+          }}
+        ></Rating>
+
+        <TextField
+          placeholder="評價..."
+          multiline
+          fullWidth
+          margin="dense"
+          rows={4}
+          rowsMax={5}
+          value={comment}
+          inputProps={{ maxLength: 50 }}
+          onChange={(e) => setComment(e.target.value)}
+        />
+        <Button
+          color="secondary"
+          variant="contained"
+          onClick={() => {
+            //完成並送出評價
+            completeOrdersWithComments(
+              _orderData.pid,
+              _orderId,
+              auth?.currentUser?.uid,
+              rating,
+              comment
+            )
+              .then(() => {
+                setAlert({
+                  isLoading: false,
+                  isShow: true,
+                  title: "完成!",
+                  content: "感謝評價",
+                  buttonText: "確認",
+                  closeCallback: () => {
+                    window.location.reload();
+                  },
+                });
+              })
+              .catch((err) => {
+                setAlert({
+                  isLoading: false,
+                  isShow: true,
+                  title: "錯誤",
+                  content: "發生不明錯誤，請稍後再試",
+                  buttonText: "確認",
+                  closeCallback: () => {
+                    console.log(err);
+                  },
+                });
+              });
+          }}
+        >
+          送出
+        </Button>
+      </>
+    );
+  };
+
+  //唯讀評價
+  const readOnlyRating = () => {
+    getOrderRatingComment(_orderData.pid, _orderId).then((snapShot) => {
+      var data = snapShot.data();
+      console.log(data);
+      setRating(data.rating);
+      setComment(data.msg);
+    });
+    return (
+      <>
+        {isSeller && (
+          //賣家看見留言者
+          <div className="spci__avatorContaier">
+            <Avatar src={targetUser?.photoURL}></Avatar>
+            <a href={"/profile/" + targetUser?.id}>{targetUser?.name}</a>
+          </div>
+        )}
+        <Rating value={rating} readOnly></Rating>
+        <TextField readOnly value={comment}></TextField>
       </>
     );
   };
@@ -190,7 +354,9 @@ function InProgressCard({
 
           <div className="info-text-container">
             <div className="info-text"></div>
-            <div className="info-text">{_orderData.paid?"已付款":"未付款"}</div>
+            <div className="info-text">
+              {_orderData.paid ? "已付款" : "未付款"}
+            </div>
           </div>
 
           <div className="info-text-container">

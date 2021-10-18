@@ -27,8 +27,6 @@ async function getProductState() {
       return snapShot.data();
     });
 }
-
-
 function getProductById(pid) {
   let query = firestore.collection("product").doc(pid);
   return query.get().then().catch();
@@ -68,6 +66,7 @@ function secToDate(sec) {
   curdate.setTime(sec * 1000);
   return curdate.toLocaleDateString(navigator.language);
 }
+
 
 export {
   getAllProductsList,

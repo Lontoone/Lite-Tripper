@@ -22,7 +22,7 @@ import {
 import { TabPanel } from "@material-ui/lab";
 import OrdersWithCalendar from "./OrdersWithCalendar";
 function SellerPage() {
-  const [tabValue, setTabValue] = React.useState("1");
+  const [tabValue, setTabValue] = React.useState(0);
   //網址參數
   const { uid } = useParams();
   const History = useHistory();
@@ -49,19 +49,33 @@ function SellerPage() {
           textColor="primary"
           centered
         >
+          <Tab label="商品管理" />
           <Tab label="訂單" />
           <Tab label="進行中" />
           <Tab label="已完成" />
         </Tabs>
-        <TabPanel value={tabValue} index={0}>
-          <OrdersWithCalendar isSeller={true} state={["created"]}></OrdersWithCalendar>
-        </TabPanel>
-
+        <TabPanel value={tabValue} index={0}></TabPanel>
         <TabPanel value={tabValue} index={1}>
-        <OrdersWithCalendar isSeller={true} state={["confirmed"]}></OrdersWithCalendar>
+          <OrdersWithCalendar
+            isSeller={true}
+            state={["created"]}
+          ></OrdersWithCalendar>
         </TabPanel>
 
-        <TabPanel value={tabValue} index={2}></TabPanel>
+        <TabPanel value={tabValue} index={2}>
+          <OrdersWithCalendar
+            isSeller={true}
+            state={["confirmed"]}
+          ></OrdersWithCalendar>
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={3}>
+          <OrdersWithCalendar
+            isSeller={true}
+            showCalendar={false}
+            state={["finished","rated"]}
+          ></OrdersWithCalendar>
+        </TabPanel>
       </Paper>
     </div>
   );

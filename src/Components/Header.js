@@ -7,6 +7,8 @@ import {
   Container,
   IconButton,
   InputBase,
+  Menu,
+  MenuItem,
   Paper,
   TextField,
   Toolbar,
@@ -28,8 +30,19 @@ function Header() {
   //授權hook
   const [user, authLoading, error] = useAuthState(auth);
   const [userData, setUserDate] = useState({});
+
   const [shoppingCart, setShoppingCart] = useState([]);
   const history = useHistory();
+
+  //使用者頭項 menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const userMenuOpen = Boolean(anchorEl);
+  const userMenu_handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const userMenu_handleClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     getUserData(user?.uid).then((data) => {
@@ -89,22 +102,52 @@ function Header() {
           </IconButton>
 
           {/* 購物車 */}
-          <IconButton component="a" href={"/ShoppingCart/"+user?.uid}>
-            <Badge badgeContent={shoppingCart? shoppingCart.length:0} color="secondary">
+          <IconButton component="a" href={"/ShoppingCart/" + user?.uid}>
+            <Badge
+              badgeContent={shoppingCart ? shoppingCart.length : 0}
+              color="secondary"
+            >
               <LocalMallIcon />
             </Badge>
           </IconButton>
           {/* 用戶頭相 */}
           <IconButton
-            onClick={() => {
-              user?
-              history.push("/user/" + user?.uid):
-              history.push("/signIn")
+            onClick={(e) => {
+              user
+                ? userMenu_handleClick(e) //history.push("/user/" + user?.uid)
+                : history.push("/signIn");
             }}
             edge="end"
           >
             <Avatar src={user?.photoURL}></Avatar>
           </IconButton>
+
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={userMenuOpen}
+            onClose={userMenu_handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem
+              onClick={() => {
+                userMenu_handleClose();
+                history.push("/user/" + user?.uid);
+              }}
+            >
+              用戶介面
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                userMenu_handleClose();
+                history.push("/seller/" + user?.uid);
+              }}
+            >
+              賣方管理
+            </MenuItem>
+          </Menu>
         </div>
       </Toolbar>
     </AppBar>

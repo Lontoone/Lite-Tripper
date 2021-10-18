@@ -1,5 +1,5 @@
 .root {
-  width: 80%;
+  max-width: 800px;
   height: auto;
   min-height: 250px;
   margin: 0 auto;
@@ -59,12 +59,30 @@
   justify-content: space-around;
 }
 
+.spci__avatorContaier {
+  display: flex;
+  flex-direction: row;
+  
+  align-items: center;
+}
+.spci__avatorContaier img {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+.spci__avatorContaier *{
+  font-size: 8pt;
+}
+
 @media only screen and (max-width: 600px) {
   .root {
     flex-direction: column;
   }
 
   .infoContainer {
+    width: 90%;
+  }
+  .actionContainer {
     width: 90%;
   }
 }
