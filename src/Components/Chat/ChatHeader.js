@@ -1,15 +1,27 @@
 import React, { useEffect, useState } from "react";
 import {
   AppBar,
-  Box,
-  CssBaseline,
+  makeStyles,
   IconButton,
   Toolbar,
   Typography,
 } from "@material-ui/core";
 import { firestore } from "../../utils/firebase";
 import { MenuOutlined } from "@material-ui/icons";
+
+const useStyle = makeStyles((theme) => ({
+  Listbutton: {
+    [theme.breakpoints.up("sm")]: {
+      display: "None",
+    },
+    [theme.breakpoints.down("sm")]: {
+      display: "block",
+    },
+  },
+}));
 function ChatHeader({ reciverid, handleDrawerToggle, drawerWidth }) {
+  const classes = useStyle(); 
+  
   const [title, setTitle] = useState("");
   useEffect(() => {
     firestore
@@ -32,6 +44,7 @@ function ChatHeader({ reciverid, handleDrawerToggle, drawerWidth }) {
       >
         <Toolbar>
           <IconButton
+            className={classes.Listbutton}
             color="inherit"
             edge="start"
             onClick={handleDrawerToggle}

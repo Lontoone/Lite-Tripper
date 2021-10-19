@@ -1,4 +1,11 @@
-import { Container, Drawer, Box, Paper } from "@material-ui/core";
+import {
+  Container,
+  Drawer,
+  Box,
+  Paper,
+  Grid,
+  makeStyles,
+} from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router";
 import ChatList from "../Components/Chat/ChatList";
@@ -10,7 +17,15 @@ import ChatHeader from "../Components/Chat/ChatHeader";
 
 const drawerWidth = 240;
 
+const useStyle = makeStyles((theme) => ({
+  chatList: {
+    [theme.breakpoints.down("sm")]: {
+      display:"None"
+    },
+  },
+}));
 export default function Chat(props) {
+  const classes = useStyle(); 
   const History = useHistory();
   //取得當下登入人的id，若無則空字串
   const currentUid = getLoginData()?.id || "";
@@ -37,37 +52,43 @@ export default function Chat(props) {
   return (
     <div>
       <Container>
-        <Box>
-          <Drawer
-            container={container}
-            variant="temporary"
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Box>
-        <Switch>
-          {/* 當沒有輸入聊天室id */}
-          <Route exact path="/Chat/">
-            {/* 只有顯示聊天室的bar */}
-            <ChatHeader
-              handleDrawerToggle={handleDrawerToggle}
-              drawerWidth={drawerWidth}
-            />
-            <Paper />
-          </Route>
-          {/* 當沒有輸入聊天室id */}
-          <Route exact path="/Chat/:chatId">
-            <ChatRoom
-              handleDrawerToggle={handleDrawerToggle}
-              drawerWidth={drawerWidth}
-            />
-          </Route>
-        </Switch>
+        <Drawer
+          container={container}
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        >
+          {drawer}
+        </Drawer>
+
+        <Grid container>
+          <Grid item md ="3">
+            <Box className={classes.chatList}>{drawer}</Box>
+          </Grid>
+          <Grid item md="9" sm="12">
+            <Switch>
+              {/* 當沒有輸入聊天室id */}
+              <Route exact path="/Chat/">
+                {/* 只有顯示聊天室的bar */}
+                <ChatHeader
+                  handleDrawerToggle={handleDrawerToggle}
+                  drawerWidth={drawerWidth}
+                />
+                <Paper />
+              </Route>
+              {/* 當沒有輸入聊天室id */}
+              <Route exact path="/Chat/:chatId">
+                <ChatRoom
+                  handleDrawerToggle={handleDrawerToggle}
+                  drawerWidth={drawerWidth}
+                />
+              </Route>
+            </Switch>
+          </Grid>
+        </Grid>
       </Container>
     </div>
   );

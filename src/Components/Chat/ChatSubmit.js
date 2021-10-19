@@ -38,7 +38,9 @@ function ChatSubmit({ chatId, reciverid }) {
   const Shoplist = () => {
     return (
       <List>
-        {products.length !== 0 ? (
+        {products?.length === 0 ?  (
+          <p>目前該用戶無商品</p>
+        ):(
           products.map((product, index) => {
             return (
               <div
@@ -56,8 +58,6 @@ function ChatSubmit({ chatId, reciverid }) {
               </div>
             );
           })
-        ) : (
-          <p>目前該用戶無商品</p>
         )}
       </List>
     );
