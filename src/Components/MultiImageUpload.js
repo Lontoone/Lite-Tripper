@@ -65,15 +65,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function MultiImageUpload({ setImagesCallback }) {
+function MultiImageUpload({ setImagesCallback, defaultImgs }) {
   const classes = useStyles();
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState(defaultImgs || []);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const photoMaxCount = 6;
 
   useEffect(() => {
     setImagesCallback(images);
+    console.log(images);
   }, [images]);
 
   const uploadImage = (e) => {
@@ -84,6 +85,7 @@ function MultiImageUpload({ setImagesCallback }) {
     //加入現有檔案
     var files = e.target.files;
     const allFiles = [...files, ...images];
+    console.log(allFiles);
     setImages(allFiles);
   };
 
@@ -111,11 +113,14 @@ function MultiImageUpload({ setImagesCallback }) {
           <ParallaxCarousel
             data={Array(images?.length)
               .fill()
-              .map((_, i) => ({
+              .map((_, i) => ({                
                 id: i,
                 title: "",
                 subtittle: "",
-                image: URL.createObjectURL(images[i]),
+                image:
+                  images[i] instanceof File 
+                  ? URL.createObjectURL(images[i]):
+                   images[i],
               }))}
             setIndex={() => setCurrentIndex}
             style={images.length < 1 ? { display: "none" } : {}}

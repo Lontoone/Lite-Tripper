@@ -17,6 +17,7 @@ import MyTest from "./pages/myTest";
 import ShoppingCart from "./pages/ShoppingCart";
 import UserPage from "./pages/UserPage";
 import SellerPage from "./pages/SellerPage";
+import EditProduct from "./pages/EditProduct";
 
 function App() {
   return (
@@ -63,6 +64,12 @@ function App() {
           <Route exact path="/CreateProduct">
             <Layout>
               <CreateProduct />
+            </Layout>
+          </Route>
+          {/* 修改商品 */}
+          <Route exact path="/EditProduct/:pid">
+            <Layout>
+              <EditProduct />
             </Layout>
           </Route>
           {/* 商品頁面 */}

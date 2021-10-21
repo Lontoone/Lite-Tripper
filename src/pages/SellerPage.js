@@ -21,6 +21,7 @@ import {
 } from "@material-ui/core";
 import { TabPanel } from "@material-ui/lab";
 import OrdersWithCalendar from "./OrdersWithCalendar";
+import ProductList from "../Components/ProductList";
 function SellerPage() {
   const [tabValue, setTabValue] = React.useState(0);
   //網址參數
@@ -54,26 +55,30 @@ function SellerPage() {
           <Tab label="進行中" />
           <Tab label="已完成" />
         </Tabs>
-        <TabPanel value={tabValue} index={0}></TabPanel>
+        {/* 商品管理 */}
+        <TabPanel value={tabValue} index={0}>
+          <ProductList></ProductList>
+        </TabPanel>
+        {/* 訂單 */}
         <TabPanel value={tabValue} index={1}>
           <OrdersWithCalendar
             isSeller={true}
             state={["created"]}
           ></OrdersWithCalendar>
         </TabPanel>
-
+        {/* 進行中 */}
         <TabPanel value={tabValue} index={2}>
           <OrdersWithCalendar
             isSeller={true}
             state={["confirmed"]}
           ></OrdersWithCalendar>
         </TabPanel>
-
+        {/* 已完成 */}
         <TabPanel value={tabValue} index={3}>
           <OrdersWithCalendar
             isSeller={true}
             showCalendar={false}
-            state={["finished","rated"]}
+            state={["finished", "rated"]}
           ></OrdersWithCalendar>
         </TabPanel>
       </Paper>

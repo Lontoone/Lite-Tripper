@@ -78,8 +78,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EditableSheetTable({ dataCallback, totalCallback }) {
-  const [data, setData] = useState([
+function EditableSheetTable({ dataCallback, totalCallback,defaultData,defaulTotal }) {
+  const [data, setData] = useState(defaultData||[
     {
       id: 0,
       content: "",
@@ -87,7 +87,7 @@ function EditableSheetTable({ dataCallback, totalCallback }) {
     },
   ]);
 
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(defaulTotal||0);
 
   useEffect(() => {
     dataCallback(data);

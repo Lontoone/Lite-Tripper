@@ -32,6 +32,13 @@ function getProductById(pid) {
   return query.get().then().catch();
 }
 
+function deleteProduct(pid) {
+  var productRef = firestore.collection("product").doc(pid);
+  const batch=firestore.batch();
+  batch.delete(productRef);
+  //TODO....刪除圖片
+}
+
 function getQueryByOption(collection, options = {}) {
   //https://stackoverflow.com/questions/48036975/firestore-multiple-conditional-where-clauses
   let { where, orderBy, limit } = options;
@@ -67,7 +74,6 @@ function secToDate(sec) {
   return curdate.toLocaleDateString(navigator.language);
 }
 
-
 export {
   getAllProductsList,
   getProductState,
@@ -75,4 +81,5 @@ export {
   getProductById,
   currencyFormat,
   secToDate,
+  deleteProduct,
 };

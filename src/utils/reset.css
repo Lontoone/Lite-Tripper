@@ -29,6 +29,7 @@ time, mark, audio, video {
 
 body {
     line-height:1;
+    overflow: scroll !important;
 }
 
 article,aside,details,figcaption,figure,

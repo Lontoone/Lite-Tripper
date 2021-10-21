@@ -21,8 +21,9 @@ export class CalendarPicker extends React.Component {
     this.get_td_classes = this.get_td_classes.bind(this);
   }
   handleSelect(td) {
-
-    if(this.state.readonly){return;}
+    if (this.state.readonly) {
+      return;
+    }
 
     this.setState({ selectedDate: td.date });
     console.log(this.state.selectedDate);
@@ -33,7 +34,7 @@ export class CalendarPicker extends React.Component {
       endDate: endday.setDate(endday.getDate() + this.state.duration - 1),
     });
 
-    if (this.state.onSelectCallback!=null) {
+    if (this.state.onSelectCallback != null) {
       this.state.onSelectCallback(td);
     }
   }
@@ -64,8 +65,11 @@ export class CalendarPicker extends React.Component {
     //可互動
     var result = "cp__date-td";
     if (_td?.clickable) {
-      //目前選擇 (單日)      
-      if (this.state.duration == 1 && this.state.selectedDate?.getTime() == _td.date.getTime()) {
+      //目前選擇 (單日)
+      if (
+        this.state.duration == 1 &&
+        this.state.selectedDate?.getTime() == _td.date.getTime()
+      ) {
         result += " cp_selected";
       }
       //目前選擇 (多日)
@@ -95,13 +99,13 @@ export class CalendarPicker extends React.Component {
     }
     return result;
   }
-  
+
   render() {
     var today = new Date();
     const currentMonth = this.state.month;
     const currentYear = this.state.year;
 
-    console.log(today,currentMonth, currentYear);
+    console.log(today, currentMonth, currentYear);
 
     const weeks_th = ["一", "二", "三", "四", "五", "六", "日"];
     const months = [
@@ -143,13 +147,22 @@ export class CalendarPicker extends React.Component {
 
             //判斷時間是否已經過了:過期就不會有選取效果
             if (
-              _tdDate.getTime()<=today.getTime()||
+              _tdDate.getTime() <= today.getTime() ||
+              !avaliable_week[j] ||
               (month == today.getMonth() &&
                 year == today.getFullYear() &&
                 date < today.getDate()) //||$.inArray(j.toString(), avaliable_week) == -1 //賣家自訂義非販賣時間
             ) {
               //cell.classList.add("notClickableDate");
-              console.log(year + " " + month+" "+today.getFullYear() +" "+today.getMonth());
+              console.log(
+                year +
+                  " " +
+                  month +
+                  " " +
+                  today.getFullYear() +
+                  " " +
+                  today.getMonth()
+              );
               _tds.push({
                 clickable: false,
                 selected: false,
@@ -178,7 +191,7 @@ export class CalendarPicker extends React.Component {
       return _trs;
     }
 
-    var table = showCalendar(this.state.month, this.state.year);
+    var table = showCalendar(this.state.month, this.state.year,this.state.avaliableWeekDays);
 
     return (
       <div className="cp__root">
@@ -254,10 +267,11 @@ export class CalendarPicker extends React.Component {
 }
 
 CalendarPicker.defaultProps = {
-  readonly:false,
+  readonly: false,
   duration: 1,
   month: new Date().getMonth(),
   year: new Date().getFullYear(),
+  avaliableWeekDays: [true, true, true, true, true, true, true],
   onSelectCallback: {},
 };
 export default CalendarPicker;

@@ -12,6 +12,7 @@ import {
   ButtonGroup,
   IconButton,
   CircularProgress,
+  Container,
 } from "@material-ui/core";
 import React, { useEffect, useState, useStyle } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -51,12 +52,14 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     display: "flex",
     flexDirection: "row",
+    justifyContent:"center",
+    alignItems:"center",
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column",
     },
   },
   imagesContaier: {
-    //width: "70%",
+    width: "70%",
     flex: 1,
     padding: "0 100px",
     margin: "0 auto",
@@ -67,10 +70,21 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "white",
     },
   },
+
+  image: {
+    display: "flex",
+    height:"100%",
+    maxHeight:"50vh",
+    justifyContent: "center",
+    alignContent: "center",
+    margin:"auto"
+  },
+
   info: {
     display: "flex",
     flexDirection: "column",
     width: 500,
+    minHeight:350,
     padding: theme.spacing(6, 5),
     backgroundColor: "#f9f9f9",
     [theme.breakpoints.down("xs")]: {
@@ -135,7 +149,7 @@ const useStyles = makeStyles((theme) => ({
     height: 50,
     flexDirection: "row",
     //backgroundColor: orange[100],
-    position: "absolute",
+    //position: "absolute",
     bottom: 0,
     justifyContent: "space-between",
     alignItems: "center",
@@ -219,7 +233,7 @@ function Product() {
     quantity: 1,
     startDate: null,
     endDate: null,
-    duration:1,
+    duration: 1,
     /*
     price:1,
     seller:null,
@@ -303,7 +317,7 @@ function Product() {
           component={Paper}
           className={classes.infoContainer}
         >
-          {/* 圖片 */}
+          {/* 圖片 
           <Grid item className={classes.imagesContaier}>
             <ParallaxCarousel
               data={Array(data?.images?.length)
@@ -315,6 +329,10 @@ function Product() {
                   image: data?.images[i],
                 }))}
             />
+          </Grid>*/}
+          {/* 圖片 */}
+          <Grid item className={classes.imagesContaier}>
+            <img src={data.thumbnail} className={classes.image}></img>
           </Grid>
 
           {/* 資訊欄 */}
@@ -553,6 +571,7 @@ function Product() {
             duration={data.duration}
             year={today.getFullYear()}
             month={today.getMonth()}
+            avaliableWeekDays={data.openWeek}
             onSelectCallback={(e) =>
               setOrderData((old) => {
                 let update = Object.assign({}, old);

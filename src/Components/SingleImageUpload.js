@@ -2,9 +2,9 @@
 import { Box, Button, Paper } from "@material-ui/core";
 import React, { useState } from "react";
 
-function SingleImageUpload({ setFile }) {
+function SingleImageUpload({ setFile, defaultValue }) {
   const [imgURL, setImgURL] = useState(
-    "https://react.semantic-ui.com/images/wireframe/image.png"
+    defaultValue || "https://react.semantic-ui.com/images/wireframe/image.png"
   );
 
   //讀input圖片 preview
@@ -26,7 +26,7 @@ function SingleImageUpload({ setFile }) {
           margin: "0 auto",
           height: "90%",
           width: "90%",
-          overflow:"hidden",
+          overflow: "hidden",
           maxHeight: 300,
         }}
         sx={{
@@ -46,9 +46,9 @@ function SingleImageUpload({ setFile }) {
           variant="contained"
           component="label"
           style={{
-            display:"flex",
+            display: "flex",
             margin: "0 auto",
-            margin:8,
+            margin: 8,
           }}
         >
           上傳圖片
