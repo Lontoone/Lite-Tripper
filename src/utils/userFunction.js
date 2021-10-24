@@ -201,6 +201,12 @@ async function completeOrdersWithComments(pid, orderId, uid, rating, msg) {
 }
 
 //取得該商品所有評價
+async function getProductRatingDoc(pid  ){
+  return await firestore
+  .collection("productComments")
+  .doc(pid)
+  .get();
+}
 async function getRatingComments(pid) {
   return await firestore
     .collection("productComments")
@@ -216,6 +222,8 @@ async function getOrderRatingComment(pid, oid) {
     .doc(oid)
     .get();
 }
+
+//
 
 function parseState(stateCode) {
   if (stateCode == "created") {
@@ -245,4 +253,5 @@ export {
   completeOrdersWithComments,
   getRatingComments,
   getOrderRatingComment,
+  getProductRatingDoc,
 };

@@ -6,7 +6,6 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 export class CalendarPicker extends React.Component {
   state = {
     selectedDate: 99,
-    duration: 2,
     trs: [],
     endDate: new Date(),
   };
@@ -14,6 +13,10 @@ export class CalendarPicker extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.props;
+
+
+    console.log(this.props);
+    console.log(this.defaultProps);
 
     this.handleMonthButton = this.handleMonthButton.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
@@ -31,8 +34,9 @@ export class CalendarPicker extends React.Component {
     //一同選擇duraion天後的天數
     const endday = new Date(td.date);
     this.setState({
-      endDate: endday.setDate(endday.getDate() + this.state.duration - 1),
+      endDate: endday.setDate(endday.getDate() + parseInt(this.state.duration)-1),
     });
+    console.log(endday);
 
     if (this.state.onSelectCallback != null) {
       this.state.onSelectCallback(td);
@@ -66,6 +70,7 @@ export class CalendarPicker extends React.Component {
     var result = "cp__date-td";
     if (_td?.clickable) {
       //目前選擇 (單日)
+      console.log(this.state.duration);
       if (
         this.state.duration == 1 &&
         this.state.selectedDate?.getTime() == _td.date.getTime()
@@ -80,7 +85,7 @@ export class CalendarPicker extends React.Component {
         const startDate = new Date(this.state.selectedDate);
         //const endDate = new Date(this.state.selectedDate).setDate(startDate.getDate() + this.state.duration - 1);
         const endDate = this.state.endDate;
-
+        console.log(_td.date+" vs "+startDate);
         if (_td.date.getTime() === startDate.getTime()) {
           result += " cp__selectStart";
         } else if (_td.date.getTime() === endDate) {

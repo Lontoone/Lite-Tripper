@@ -17,6 +17,7 @@ import ProductCard from "../Components/ProductCard";
 import ProductFilter from "../Components/ProductFilter";
 import {
   getAllProductsList,
+  getProductsByFiltered,
   getProductState,
   getQueryByOption,
 } from "../utils/ProductFuntion";
@@ -100,7 +101,7 @@ function Home() {
 
   const [orderSearch, setOrderSearch] = useState("createdAt");
   const [startAfterSearch, setStartAfterSearch] = useState(null);
-  const [limitSearch, setLimitSearch] = useState(3);
+  const [limitSearch, setLimitSearch] = useState(5);
   const [maxPageCount, setMaxPageCount] = useState(0);
 
   useEffect(async () => {
@@ -117,23 +118,21 @@ function Home() {
     //頁數
     getProductState().then((e) => {
       setMaxPageCount(Math.ceil(e.count / limitSearch));
-    });
-    /*
-    let options = {
-      //where:[["category", "==", "someCategory"]],
-      orderBy: ["createdAt"],
-      limit:5,
+    });   
+/*
+    //測試:
+    getProductsByFiltered({
+      orderBy:orderSearch,
+      startAfter:startAfterSearch,
+      limit:limitSearch,      
 
-    };
-    console.log(getQueryByOption("product", options));
-    getQueryByOption("product", options).then((e) => {
-      console.log(e);
+    }).then((r)=>{
+      console.log(r);
     });*/
   }, []);
 
   //頁數更新:
   useEffect(() => {
-    //console.log(productData.length-1);
     setStartAfterSearch(productData[productData.length - 1]);
   }, [page]);
 
@@ -163,7 +162,10 @@ function Home() {
           {/* 搜尋篩選調整 */}
           <Grid item className={classes.home__filterBox} xs={0} sm={0} lg={3}>
             {/* 商品篩選 */}
-            <ProductFilter />
+            <ProductFilter submitCallback={(e)=>{
+              console.log(e);
+              setProductData(e);
+              }}/>
           </Grid>
 
           {/* 商品區 */}

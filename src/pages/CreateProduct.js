@@ -137,6 +137,7 @@ function CreateProduct({ isEdit = false, pid, defaultProduct }) {
   const [town, setTown] = useState(defaultProduct?.town);
 
   const [discribe, setDiscribe] = useState(defaultProduct?.discribe || "");
+  var _tempContent = "";
 
   //const [images, setImages] = useState(defaultProduct?.images || []);
 
@@ -181,55 +182,61 @@ function CreateProduct({ isEdit = false, pid, defaultProduct }) {
       ? firestore.collection("product").doc(pid)
       : firestore.collection("product").doc();
     var isEdit = pid == null;
-    const batch = firestore.batch();
 
     const thumnFileName = ref.id + "-t";
     console.log(ref);
     //上傳縮圖
-    var thumbnailUrl = (
-      product.thumbnailPhoto instanceof File
-        ? Promise.resolve(
-            UploadImg("ProductImg", thumnFileName, product.thumbnailPhoto)
-          )
-        : product.thumbnailPhoto
-    )
-      .then((thubnaimLink) => {
-        //上傳產品
-        var newData = {
-          //id: key,
-          seller: auth.currentUser.uid,
-          title: product.title,
-          peopleCountLimit: product.peopleCountLimit,
-          duration: product.duration,
-          openWeek: product.weekDays,
-          county: product.county,
-          town: product.town,
-          //images: urls,
-          thumbnail: thubnaimLink,
-          bill: { data: product.billData, total: product.billTotal },
-          discribe: product.discribe,
-          //預設評價:
-          //rating: 5,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        };
-        console.log(newData);
-        //ref.set(newData);
-        batch.set(ref, newData);
+    var thumbnailPhoto = "";
+    if (product.thumbnailPhoto && product.thumbnailPhoto instanceof File) {
+      //需要上傳檔案
+      Promise.resolve(
+        UploadImg("ProductImg", thumnFileName, product.thumbnailPhoto)
+      ).then((link) => {
+        uploadProduct(ref,product, link);
+      });
+    } else {
+      //無須上傳檔案，僅更新product
+      uploadProduct(ref,product, product.thumbnailPhoto);
+    }
+  }
 
-        //更新進user 商品
-        const userRef = firestore.collection("users").doc(auth.currentUser.uid);
-        batch.update(userRef, {
-          products: firebase.firestore.FieldValue.arrayUnion(ref.id),
-        });
+  function uploadProduct(ref,product, thubnaimLink) {    
+    const batch = firestore.batch();
+    var newData = {
+      //id: key,
+      seller: auth.currentUser.uid,
+      title: product.title,
+      peopleCountLimit: product.peopleCountLimit,
+      duration: product.duration,
+      openWeek: product.weekDays,
+      county: product.county,
+      town: product.town,
+      //images: urls,
+      thumbnail: thubnaimLink,
+      bill: { data: product.billData, total: product.billTotal },
+      discribe: product.discribe,
+      //預設評價:
+      //rating: 5,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    console.log(newData);
+    //ref.set(newData);
+    batch.set(ref, newData);
 
-        //更新商品doc數量
-        if (!isEdit) {
-          const statsRef = firestore.collection("product").doc("--stats--");
-          const increment = firebase.firestore.FieldValue.increment(1);
-          batch.update(statsRef, { count: increment });
-        }
-        batch.commit();
-      })
+    //更新進user 商品
+    const userRef = firestore.collection("users").doc(auth.currentUser.uid);
+    batch.update(userRef, {
+      products: firebase.firestore.FieldValue.arrayUnion(ref.id),
+    });
+
+    //更新商品doc數量
+    if (!isEdit) {
+      const statsRef = firestore.collection("product").doc("--stats--");
+      const increment = firebase.firestore.FieldValue.increment(1);
+      batch.update(statsRef, { count: increment });
+    }
+    batch
+      .commit()
       .then(() => {
         setIsCreateSuccess(true);
       })
@@ -359,7 +366,11 @@ function CreateProduct({ isEdit = false, pid, defaultProduct }) {
               convertToRaw(value.getCurrentContent())
             );
             console.log(content);
-            setDiscribe(content);
+            _tempContent = content;
+            //setDiscribe(content);
+          }}
+          onBlur={() => {
+            setDiscribe(_tempContent);
           }}
           onSave={(value) => setDiscribe(value)}
         />

@@ -59,7 +59,7 @@ function HomeAdsCarouse() {
 
   useEffect(() => {
     //先抓最高評價ㄉ商品
-    getAllProductsList("rating").then((e) => {
+    getAllProductsList().then((e) => {
       console.log(e);
       setData(e);
     });

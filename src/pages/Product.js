@@ -37,6 +37,7 @@ import { addToShoppingCart } from "../utils/userFunction";
 import FullScreenDialog from "../Components/FullScreenDialog";
 import zIndex from "@material-ui/core/styles/zIndex";
 import "../utils/reset.css";
+import ProductRating from "../Components/ProductRating";
 
 const today = new Date();
 
@@ -52,8 +53,8 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     display: "flex",
     flexDirection: "row",
-    justifyContent:"center",
-    alignItems:"center",
+    justifyContent: "center",
+    alignItems: "center",
     [theme.breakpoints.down("xs")]: {
       flexDirection: "column",
     },
@@ -73,18 +74,18 @@ const useStyles = makeStyles((theme) => ({
 
   image: {
     display: "flex",
-    height:"100%",
-    maxHeight:"50vh",
+    height: "100%",
+    maxHeight: "50vh",
     justifyContent: "center",
     alignContent: "center",
-    margin:"auto"
+    margin: "auto",
   },
 
   info: {
     display: "flex",
     flexDirection: "column",
     width: 500,
-    minHeight:350,
+    minHeight: 350,
     padding: theme.spacing(6, 5),
     backgroundColor: "#f9f9f9",
     [theme.breakpoints.down("xs")]: {
@@ -183,7 +184,10 @@ const useStyles = makeStyles((theme) => ({
 
   //***文字介紹*****/
   discribtionContainer: {
-    margin: theme.spacing(3),
+    width: "80%",
+    //margin: theme.spacing(3),
+    margin: "auto",
+    lineHeight: "1.3em",
   },
 
   //***價表格*****/
@@ -217,6 +221,8 @@ function Product() {
   const pid = urlSearchParams.get("pid");
 
   const classes = useStyles();
+
+  const [isBusy, setIsBusy] = useState(true);
 
   const [region, setRegion] = useState([]);
   const [county, setCounty] = useState("");
@@ -292,7 +298,8 @@ function Product() {
         countyList().then((list) => {
           setRegion(list);
         })
-      );
+      )
+      .then(setIsBusy(false));
   }, []);
 
   useEffect(() => {
@@ -308,16 +315,19 @@ function Product() {
     townCode2Name(data.county, data.town, setTown);
   }, [region]);
 
-  return (
-    <div style={{ position: "relative" }}>
-      <Grid container className={classes.mainContainer}>
-        <Grid
-          item
-          container
-          component={Paper}
-          className={classes.infoContainer}
-        >
-          {/* 圖片 
+  if (isBusy) {
+    return <></>;
+  } else
+    return (
+      <div style={{ position: "relative" }}>
+        <Grid container className={classes.mainContainer}>
+          <Grid
+            item
+            container
+            component={Paper}
+            className={classes.infoContainer}
+          >
+            {/* 圖片 
           <Grid item className={classes.imagesContaier}>
             <ParallaxCarousel
               data={Array(data?.images?.length)
@@ -330,277 +340,277 @@ function Product() {
                 }))}
             />
           </Grid>*/}
-          {/* 圖片 */}
-          <Grid item className={classes.imagesContaier}>
-            <img src={data.thumbnail} className={classes.image}></img>
-          </Grid>
+            {/* 圖片 */}
+            <Grid item className={classes.imagesContaier}>
+              <img src={data.thumbnail} className={classes.image}></img>
+            </Grid>
 
-          {/* 資訊欄 */}
-          <Grid className={classes.info}>
-            {/* 標題 */}
-            <Typography className={classes.info__title}>
-              {data.title}
-            </Typography>
-
-            {/* TODO:評價 | 收藏 | 成交數量 */}
-            <div className={classes.subinfo}>
-              {/* 評價 */}
-              <div className={classes.subinfo__columnContent}>
-                <Rating readOnly></Rating>
-                <Typography>({123})</Typography>
-              </div>
-              {/* 收藏 */}
-              <div className={classes.subinfo__columnContent}>
-                <IconButton>
-                  <FavoriteIcon color="primary" />
-                </IconButton>
-                <Typography>({123})</Typography>
-              </div>
-              {/* 成交數量 */}
-              <div className={classes.subinfo__columnContent}>
-                <Typography>成交數量 {123}</Typography>
-              </div>
-            </div>
-
-            {/* 區域 */}
-            <div className={classes.info__rowContent}>
-              <Typography color="textSecondary">
-                {county}
-                {town}
+            {/* 資訊欄 */}
+            <Grid className={classes.info}>
+              {/* 標題 */}
+              <Typography className={classes.info__title}>
+                {data.title}
               </Typography>
-            </div>
 
-            {/* 人數上限 */}
-            <div className={classes.info__rowContent}>
-              <Typography
-                color="textSecondary"
-                className={classes.info__subTitle}
-              >
-                人數
-              </Typography>
-              {/* 增加 / 減少 按鈕 */}
-              <div className={classes.info__numberInputContainer}>
-                <Button
-                  variant="contained"
-                  tiny
-                  className={classes.info__button}
-                  onClick={() => {
-                    handleOrderCount(-1);
-                  }}
-                >
-                  -
-                </Button>
-                <Typography className={classes.info__number}>
-                  {orderData.quantity}
-                </Typography>
-                <Button
-                  variant="contained"
-                  small
-                  className={classes.info__button}
-                  onClick={() => {
-                    handleOrderCount(1);
-                  }}
-                >
-                  +
-                </Button>
+              {/* TODO:評價 | 收藏 | 成交數量 */}
+              <div className={classes.subinfo}>
+                {/* 評價 */} 
+                <ProductRating></ProductRating>
 
+                {/* 收藏 */}
+                <div className={classes.subinfo__columnContent}>
+                  <IconButton>
+                    <FavoriteIcon color="primary" />
+                  </IconButton>
+                  <Typography>({0})</Typography>
+                </div>
+                {/* 成交數量 */}
+                <div className={classes.subinfo__columnContent}>
+                  <Typography>成交數量 {0}</Typography>
+                </div>
+              </div>
+
+              {/* 區域 */}
+              <div className={classes.info__rowContent}>
                 <Typography color="textSecondary">
-                  (上限{data.peopleCountLimit})
+                  {county}
+                  {town}
                 </Typography>
               </div>
-            </div>
 
-            {/* 天數 */}
-            <div className={classes.info__rowContent}>
-              <Typography
-                color="textSecondary"
-                className={classes.info__subTitle}
-              >
-                {" "}
-                天數{" "}
-              </Typography>
-              <Typography color="textSecondary">{data.duration}</Typography>
-            </div>
-
-            {/* 開放星期 */}
-            <div className={classes.info__columnContent}>
-              <Typography color="textSecondary">開放星期 </Typography>
-              <WeekdaySelect
-                readonly={true}
-                value={data.openWeek}
-              ></WeekdaySelect>
-            </div>
-
-            {/* 操作欄 */}
-            <Grid
-              item
-              container
-              style={{ position: "relative", height: "100%" }}
-            >
-              {/* 價格 | 按鈕 */}
-              <div className={classes.buttonGroup} id="buttonGroup">
-                <Typography className={classes.priceText} color="primary">
-                  {currencyFormat(data?.bill?.total * orderData.quantity)}
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.bigButton}
-                  onClick={
-                    auth.currentUser && orderData.startDate
-                      ? () => {
-                          //購買
-                          setAlert({ isLoading: true }); //讀條
-
-                          addToShoppingCart(
-                            auth.currentUser.uid,
-                            pid,
-                            orderData
-                          )
-                            .then(() => {
-                              setAlert({
-                                isLoading: false,
-                                isShow: true,
-                                title: "購買成功",
-                                content: "",
-                                buttonText: "確認",
-                                closeCallback: () => {},
-                              });
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                              setAlert({
-                                isLoading: false,
-                                isShow: true,
-                                title: "購買失敗",
-                                content: "發生不明原因，請稍後再試",
-                                buttonText: "確認",
-                                closeCallback: () => {},
-                              });
-                            });
-                        }
-                      : () => {
-                          console.log(orderData.startDate);
-                          //沒有登入
-                          if (!auth.currentUser) {
-                            window.location.href = "/signIn";
-                          }
-                          if (!orderData.startDate)
-                            window.location.hash = "#calendar";
-                        }
-                  }
+              {/* 人數上限 */}
+              <div className={classes.info__rowContent}>
+                <Typography
+                  color="textSecondary"
+                  className={classes.info__subTitle}
                 >
-                  {/* 讀取畫面 */}
-                  <div
-                    className={classes.loadingContainer}
-                    style={
-                      alert.isLoading
-                        ? { display: "block" }
-                        : { display: "none" }
+                  人數
+                </Typography>
+                {/* 增加 / 減少 按鈕 */}
+                <div className={classes.info__numberInputContainer}>
+                  <Button
+                    variant="contained"
+                    tiny
+                    className={classes.info__button}
+                    onClick={() => {
+                      handleOrderCount(-1);
+                    }}
+                  >
+                    -
+                  </Button>
+                  <Typography className={classes.info__number}>
+                    {orderData.quantity}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    small
+                    className={classes.info__button}
+                    onClick={() => {
+                      handleOrderCount(1);
+                    }}
+                  >
+                    +
+                  </Button>
+
+                  <Typography color="textSecondary">
+                    (上限{data.peopleCountLimit})
+                  </Typography>
+                </div>
+              </div>
+
+              {/* 天數 */}
+              <div className={classes.info__rowContent}>
+                <Typography
+                  color="textSecondary"
+                  className={classes.info__subTitle}
+                >
+                  {" "}
+                  天數{" "}
+                </Typography>
+                <Typography color="textSecondary">{data.duration}</Typography>
+              </div>
+
+              {/* 開放星期 */}
+              <div className={classes.info__columnContent}>
+                <Typography color="textSecondary">開放星期 </Typography>
+                <WeekdaySelect
+                  readonly={true}
+                  value={data.openWeek}
+                ></WeekdaySelect>
+              </div>
+
+              {/* 操作欄 */}
+              <Grid
+                item
+                container
+                style={{ position: "relative", height: "100%" }}
+              >
+                {/* 價格 | 按鈕 */}
+                <div className={classes.buttonGroup} id="buttonGroup">
+                  <Typography className={classes.priceText} color="primary">
+                    {currencyFormat(data?.bill?.total * orderData.quantity)}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.bigButton}
+                    onClick={
+                      auth.currentUser && orderData.startDate
+                        ? () => {
+                            //購買
+                            setAlert({ isLoading: true }); //讀條
+
+                            addToShoppingCart(
+                              auth.currentUser.uid,
+                              pid,
+                              orderData
+                            )
+                              .then(() => {
+                                setAlert({
+                                  isLoading: false,
+                                  isShow: true,
+                                  title: "購買成功",
+                                  content: "",
+                                  buttonText: "確認",
+                                  closeCallback: () => {},
+                                });
+                              })
+                              .catch((err) => {
+                                console.log(err);
+                                setAlert({
+                                  isLoading: false,
+                                  isShow: true,
+                                  title: "購買失敗",
+                                  content: "發生不明原因，請稍後再試",
+                                  buttonText: "確認",
+                                  closeCallback: () => {},
+                                });
+                              });
+                          }
+                        : () => {
+                            console.log(orderData.startDate);
+                            //沒有登入
+                            if (!auth.currentUser) {
+                              window.location.href = "/signIn";
+                            }
+                            if (!orderData.startDate)
+                              window.location.hash = "#calendar";
+                          }
                     }
                   >
-                    <CircularProgress
-                      className={classes.loadingCircular}
-                    ></CircularProgress>
-                  </div>
-                  購買
+                    {/* 讀取畫面 */}
+                    <div
+                      className={classes.loadingContainer}
+                      style={
+                        alert.isLoading
+                          ? { display: "block" }
+                          : { display: "none" }
+                      }
+                    >
+                      <CircularProgress
+                        className={classes.loadingCircular}
+                      ></CircularProgress>
+                    </div>
+                    購買
+                  </Button>
+                </div>
+              </Grid>
+
+              <div className={classes.userContainer}>
+                <Link to={"/profile/" + auth.currentUser?.uid}>
+                  <img
+                    src={auth.currentUser?.photoURL}
+                    className={classes.userPhoto}
+                    component={IconButton}
+                  />
+                </Link>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  className={classes.userButton}
+                >
+                  聯絡
                 </Button>
               </div>
             </Grid>
-
-            <div className={classes.userContainer}>
-              <Link to={"/profile/" + auth.currentUser?.uid}>
-                <img
-                  src={auth.currentUser?.photoURL}
-                  className={classes.userPhoto}
-                  component={IconButton}
-                />
-              </Link>
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.userButton}
-              >
-                聯絡
-              </Button>
-            </div>
           </Grid>
+
+          <DividerWithText>介紹</DividerWithText>
+          {/* 介紹 */}
+          <Grid item container className={classes.discribtionContainer}>
+            <MUIRichTextEditor
+              defaultValue={data.discribe}
+              toolbar={false}
+              readOnly
+            />
+          </Grid>
+
+          <DividerWithText>明細表</DividerWithText>
+          {/* 明細表 */}
+          <Grid item className={classes.tableContainer} component={Card}>
+            <EditableTable
+              columns={columns}
+              //map資料配合accessor
+              data={data?.bill?.data?.map((x, i) => {
+                return {
+                  content: x.content,
+                  price: x.price,
+                };
+              })}
+              getHeaderProps={(state, rowInfo, column) => ({
+                style: {
+                  height: 30,
+                  padding: 0,
+                  textAlign: "center",
+                  backgroundColor: orange[100],
+                },
+              })}
+              getCellProps={(state, rowInfo, column) => ({
+                style: {
+                  textAlign: "center",
+                },
+              })}
+            />
+          </Grid>
+
+          <DividerWithText>選擇出遊日</DividerWithText>
+          <Grid item className={classes.tableContainer} id="calendar">
+            {data.duration && (
+              <CalendarPicker
+                duration={data.duration}
+                year={today.getFullYear()}
+                month={today.getMonth()}
+                avaliableWeekDays={data.openWeek}
+                onSelectCallback={(e) =>
+                  setOrderData((old) => {
+                    let update = Object.assign({}, old);
+                    update.startDate = e.date;
+                    return update;
+                  })
+                }
+              ></CalendarPicker>
+            )}
+          </Grid>
+
+          <DividerWithText>留言</DividerWithText>
         </Grid>
 
-        <DividerWithText>介紹</DividerWithText>
-        {/* 介紹 */}
-        <Grid item container className={classes.discribtionContainer}>
-          <MUIRichTextEditor
-            defaultValue={data.discribe}
-            toolbar={false}
-            readOnly
-          />
-        </Grid>
-
-        <DividerWithText>明細表</DividerWithText>
-        {/* 明細表 */}
-        <Grid item className={classes.tableContainer} component={Card}>
-          <EditableTable
-            columns={columns}
-            //map資料配合accessor
-            data={data?.bill?.data?.map((x, i) => {
-              return {
-                content: x.content,
-                price: x.price,
-              };
-            })}
-            getHeaderProps={(state, rowInfo, column) => ({
-              style: {
-                height: 30,
-                padding: 0,
-                textAlign: "center",
-                backgroundColor: orange[100],
-              },
-            })}
-            getCellProps={(state, rowInfo, column) => ({
-              style: {
-                textAlign: "center",
-              },
-            })}
-          />
-        </Grid>
-
-        <DividerWithText>選擇出遊日</DividerWithText>
-        <Grid item className={classes.tableContainer} id="calendar">
-          <CalendarPicker
-            duration={data.duration}
-            year={today.getFullYear()}
-            month={today.getMonth()}
-            avaliableWeekDays={data.openWeek}
-            onSelectCallback={(e) =>
-              setOrderData((old) => {
-                let update = Object.assign({}, old);
-                update.startDate = e.date;
-                return update;
-              })
+        {/* 購買成功- */}
+        <FullScreenDialog
+          isOpen={alert.isShow}
+          title={alert.title}
+          content={alert.content}
+          buttonText={alert.buttonText}
+          closeCallback={() => {
+            //setShowAlert(false);
+            setAlert({ isShow: false });
+            if (alert.closeCallback) {
+              alert.closeCallback();
             }
-          ></CalendarPicker>
-        </Grid>
-
-        <DividerWithText>留言</DividerWithText>
-      </Grid>
-
-      {/* 購買成功- */}
-      <FullScreenDialog
-        isOpen={alert.isShow}
-        title={alert.title}
-        content={alert.content}
-        buttonText={alert.buttonText}
-        closeCallback={() => {
-          //setShowAlert(false);
-          setAlert({ isShow: false });
-          if (alert.closeCallback) {
-            alert.closeCallback();
-          }
-        }}
-      />
-    </div>
-  );
+          }}
+        />
+      </div>
+    );
 }
 
 function currencyFormat(num) {

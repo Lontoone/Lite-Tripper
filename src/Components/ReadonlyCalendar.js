@@ -37,13 +37,12 @@ export class ReadonlyCalendar extends React.Component {
     var result = "cp__date-td";
     if (_td?.date >= new Date()) {
       for (var i = 0; i < this.state.datas.length; i++) {
-
         var selected = this.state.datas[i].startDate;
         var duration = this.state.datas[i].duration;
         var startDate = new Date(selected);
-        var endDateTime = startDate.setDate(startDate.getDate() + duration-1);
-        var endDate=new Date(endDateTime);
-        
+        var endDateTime = startDate.setDate(startDate.getDate() + parseInt( duration) - 1);
+        var endDate = new Date(endDateTime);
+
         //目前選擇 (單日)
         if (duration == 1 && selected?.getTime() == _td.date.getTime()) {
           result += " cp_selected";
@@ -51,10 +50,7 @@ export class ReadonlyCalendar extends React.Component {
         }
 
         //目前選擇 (多日)
-        else if (
-          _td.date >= selected&&
-          _td.date <= endDate
-        ) {
+        else if (_td.date >= selected && _td.date <= endDate) {
           if (_td.date.getTime() === selected.getTime()) {
             console.log(" cp__selectStart");
             result += " cp__selectStart";
@@ -126,7 +122,6 @@ export class ReadonlyCalendar extends React.Component {
                 year == today.getFullYear() &&
                 date < today.getDate()) //||$.inArray(j.toString(), avaliable_week) == -1 //賣家自訂義非販賣時間
             ) {
-              
               _tds.push({
                 clickable: false,
                 selected: false,
