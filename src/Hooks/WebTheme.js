@@ -152,8 +152,8 @@ const productCard = {
     margin: "auto",
     display: "block",
     maxHeight: "90%",
-    //objectFit: "cover",
-    objectFit: "none",
+    objectFit: "cover",
+    //objectFit: "none",
   },
 
   productCard__infoContainer: {

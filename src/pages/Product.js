@@ -33,7 +33,7 @@ import { orange } from "@material-ui/core/colors";
 import MUIRichTextEditor from "mui-rte";
 import EditableTable from "../Components/EditableTable";
 import { auth } from "../utils/firebase";
-import { addToShoppingCart } from "../utils/userFunction";
+import { addToShoppingCart, getUserData } from "../utils/userFunction";
 import FullScreenDialog from "../Components/FullScreenDialog";
 import zIndex from "@material-ui/core/styles/zIndex";
 import "../utils/reset.css";
@@ -227,6 +227,7 @@ function Product() {
   const [region, setRegion] = useState([]);
   const [county, setCounty] = useState("");
   const [town, setTown] = useState("");
+  const [seller,setSeller]=useState({});
 
   const [data, setData] = useState({
     images: [],
@@ -292,7 +293,13 @@ function Product() {
           update.duration = e.data().duration;
           return update;
         });
-      })
+
+        //取得賣家資料
+        getUserData(e.data().seller).then((res)=>{
+          console.log(res.data());
+          setSeller(res.data());
+        })
+      })      
       .then(
         //城市清單
         countyList().then((list) => {
@@ -517,9 +524,9 @@ function Product() {
               </Grid>
 
               <div className={classes.userContainer}>
-                <Link to={"/profile/" + auth.currentUser?.uid}>
+                <Link to={"/profile/" + seller?.id}>
                   <img
-                    src={auth.currentUser?.photoURL}
+                    src={seller?.photoURL}
                     className={classes.userPhoto}
                     component={IconButton}
                   />
@@ -528,6 +535,9 @@ function Product() {
                   variant="outlined"
                   color="secondary"
                   className={classes.userButton}
+                  onClick={()=>{
+                    window.location.href="/chat/"+seller?.id;
+                  }}
                 >
                   聯絡
                 </Button>

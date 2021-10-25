@@ -359,7 +359,7 @@ function CreateProduct({ isEdit = false, pid, defaultProduct }) {
       <DividerWithText>內容</DividerWithText>
       <Grid item component={Card} className={classes.textEdiotrContainer}>
         <MUIRichTextEditor
-          label="Start typing..."
+          label=""
           defaultValue={isEdit ? discribe : ""}
           onChange={(value) => {
             const content = JSON.stringify(

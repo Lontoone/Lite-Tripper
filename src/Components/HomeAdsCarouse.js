@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
   infoBox: {
     height: "90%",
     //width: 500,
-    display: "flex",
     flex: 1,
     flexGrow: 1,
     overflow: "auto",
@@ -102,7 +101,6 @@ function HomeAdsCarouse() {
       <div className={classes.infoBox}>
         {/*<Paper>{Parser(data[currentIndex]?.data().discribe)} 123</Paper>*/}
         <MUIRichTextEditor
-          className={classes.infoBox}
           defaultValue={data[currentIndex]?.data().discribe}
           toolbar={false}
           readOnly

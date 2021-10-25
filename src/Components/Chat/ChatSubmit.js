@@ -6,13 +6,39 @@ import {
   Drawer,
   List,
   ListItem,
+  makeStyles,
 } from "@material-ui/core";
 import { firestore, firebase } from "../../utils/firebase";
 import { getLoginData } from "../../utils/localStorge";
 import { getUserProducts } from "../../utils/userFunction";
 
 import ChatProductCard from "./ChatProductCard";
+import UseClasses from "../../Hooks/WebTheme";
+
+const useStyle = makeStyles((theme) => ({
+  inputBar: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  inputField: {
+    padding: "10px 15px ",
+    display: "flex",
+    margin: "auto",
+    flexGrow: 1,
+  },
+  gridItem: {
+    display: "flex",
+    margin: "auto",
+    flexGrow: 0,
+    padding: 10,
+  },
+}));
+
 function ChatSubmit({ chatId, reciverid }) {
+  const classes = useStyle();
   //對話框相關
   const [text, setText] = useState("");
   const [textError, setTextError] = useState(false);
@@ -38,9 +64,9 @@ function ChatSubmit({ chatId, reciverid }) {
   const Shoplist = () => {
     return (
       <List>
-        {products?.length === 0 ?  (
+        {products?.length === 0 ? (
           <p>目前該用戶無商品</p>
-        ):(
+        ) : (
           products.map((product, index) => {
             return (
               <div
@@ -104,10 +130,10 @@ function ChatSubmit({ chatId, reciverid }) {
     }
   };
   return (
-    <div>
+    <>
       <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <Grid container>
-          <Grid item xs={3}>
+        <Grid container className={classes.inputBar}>
+          <div className={classes.gridItem}>
             <Button
               variant="contained"
               color="secondary"
@@ -122,8 +148,8 @@ function ChatSubmit({ chatId, reciverid }) {
             >
               {Shoplist()}
             </Drawer>
-          </Grid>
-          <Grid item xs={6}>
+          </div>
+          <div className={classes.inputField}>
             <TextField
               onChange={(e) => setText(e.target.value)}
               label="輸入訊息...."
@@ -134,15 +160,15 @@ function ChatSubmit({ chatId, reciverid }) {
               value={text}
               error={textError}
             />
-          </Grid>
-          <Grid item xs={3}>
+          </div>
+          <div className={classes.gridItem}>
             <Button type="submit" color="secondary" variant="contained">
               送出
             </Button>
-          </Grid>
+          </div>
         </Grid>
       </form>
-    </div>
+    </>
   );
 }
 

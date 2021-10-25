@@ -4,6 +4,8 @@ import axios from "axios";
 import { Paper } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import Parser from "html-react-parser";
+import * as cors from "cors";
+import { firebase,firestore } from "../utils/firebase";
 const useStyles = makeStyles((theme) => ({
   root: {
     overflow: "hidden",
@@ -35,9 +37,14 @@ function TpiNewsFrame() {
   endTime = new Date(endTime).toISOString().slice(0, 10);
   beginTime = new Date(beginTime).toISOString().slice(0, 10); //結束: 3個月後
 
+
+  //const corsHandler = cors({ origin: true });
+  //const functions = require('firebase-functions');
+
   //https://www.travel.taipei/open-api/swagger/ui/index#/Events/Events_News
   const tpiNewsUrl =
     "https://www.travel.taipei/open-api/zh-tw/Events/Activity?";
+
   var url = new URL(tpiNewsUrl);
   url.searchParams.append("begin", beginTime);
   url.searchParams.append("end", endTime);
@@ -47,7 +54,7 @@ function TpiNewsFrame() {
   const [data, setData] = useState([]);
   const [dataCount, setDataCount] = useState(1);
   const [currentData, setCurrentData] = useState({
-    description:""
+    description: "",
   });
   const classes = useStyles();
 
@@ -58,22 +65,27 @@ function TpiNewsFrame() {
   };
 
   useEffect(() => {
-    axios.get(url.href).then((res) => {
-      console.log(res.data);
-      setData(res.data.data);
-      setDataCount(res.data.total);
+    //functions.https.onRequest(
+      //async (request, response) => {
+        //corsHandler(request, response, () => {});
+        axios.get(url.href).then((res) => {
+          console.log(res.data);
+          setData(res.data.data);
+          setDataCount(res.data.total);
 
-      //預設第一筆資料
-      console.log(res.data.data[0]);
-      setCurrentData(res.data.data[0]);
-      return res.data;
-    });
+          //預設第一筆資料
+          console.log(res.data.data[0]);
+          setCurrentData(res.data.data[0]);
+          return res.data;
+        });
+      //}
+    //);
   }, []);
 
   return (
     <div>
       {console.log(currentData.description)}
-      <div>{ Parser(currentData?.description)} </div>
+      <div>{Parser(currentData?.description)} </div>
       <Paper className={classes.root}>
         {/* 推播分頁  */}
         <iframe

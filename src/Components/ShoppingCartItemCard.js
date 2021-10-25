@@ -114,7 +114,7 @@ function ShoppingCartItemCard({ _pid, _orderData, _infoPairs, _actions }) {
           <div className="info-text-container">
             <div className="info-text">購買金額</div>
             <div className="info-money">
-              {currencyFormat(productData?.bill.total)}
+              {currencyFormat(productData?.bill?.total)}
             </div>
           </div>
         </div>

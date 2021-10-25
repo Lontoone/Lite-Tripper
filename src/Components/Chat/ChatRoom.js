@@ -13,13 +13,21 @@ import { getProductById } from "../../utils/ProductFuntion";
 import ProductCard from "./../ProductCard";
 import ChatDialog from "./ChatDialog";
 const useStyle = makeStyles((theme) => ({
+  roomContainer:{
+    width:"95%",
+    height:"70%",
+    maxHeight:"90vh",
+    display:"flex",
+    flexDirection:"column",
+  },
   //TODO : 高度問題
   chatWindow: {
     borderWidth: 1,
     backgroundColor: theme.palette.background.paper,
     position: "relative",
     overflow: "auto",
-    Height: 1000,
+    //Height: 1000,
+    
   },
 }));
 
@@ -82,7 +90,7 @@ function ChatRoom({ handleDrawerToggle, drawerWidth }) {
     return <div>loading...</div>;
   }
   return (
-    <Container>
+    <div className={classes.roomContainer}>
       <ChatHeader
         reciverid={reciverid}
         drawerWidth={drawerWidth}
@@ -93,11 +101,12 @@ function ChatRoom({ handleDrawerToggle, drawerWidth }) {
           display: "flex",
           "& > :not(style)": {
             width: "100%",
-            height: "60vh",
+            height: "100%",
+            maxHeight:"70vh"
           },
         }}
       >
-        <Paper className={classes.chatWindow}>
+        <div className={classes.chatWindow}>
           <Container style={{ paddingTop: 5 }}>
             {messages.map((message) => {
               if (message?.type === "card")
@@ -113,12 +122,12 @@ function ChatRoom({ handleDrawerToggle, drawerWidth }) {
                 );
             })}
           </Container>
-        </Paper>
+        </div>
       </Box>
-      <Paper>
+      <Paper >
         <ChatSubmit chatId={chatId} reciverid={reciverid} />
       </Paper>
-    </Container>
+    </div>
   );
 }
 

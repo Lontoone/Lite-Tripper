@@ -18,14 +18,22 @@ import ChatHeader from "../Components/Chat/ChatHeader";
 const drawerWidth = 240;
 
 const useStyle = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    height: "100%",
+  },
+  chatRoomContainer: {
+    margin: "auto",
+    height: "85vh",
+  },
   chatList: {
     [theme.breakpoints.down("sm")]: {
-      display:"None"
+      display: "None",
     },
   },
 }));
 export default function Chat(props) {
-  const classes = useStyle(); 
+  const classes = useStyle();
   const History = useHistory();
   //取得當下登入人的id，若無則空字串
   const currentUid = getLoginData()?.id || "";
@@ -50,8 +58,8 @@ export default function Chat(props) {
     return <div>轉跳中</div>;
   }
   return (
-    <div>
-      <Container>
+    <>
+      <div className={classes.root}>
         <Drawer
           container={container}
           variant="temporary"
@@ -64,8 +72,8 @@ export default function Chat(props) {
           {drawer}
         </Drawer>
 
-        <Grid container>
-          <Grid item md ="3">
+        <Grid container className={classes.chatRoomContainer}>
+          <Grid item md="3">
             <Box className={classes.chatList}>{drawer}</Box>
           </Grid>
           <Grid item md="9" sm="12">
@@ -89,7 +97,7 @@ export default function Chat(props) {
             </Switch>
           </Grid>
         </Grid>
-      </Container>
-    </div>
+      </div>
+    </>
   );
 }

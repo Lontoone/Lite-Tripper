@@ -76,7 +76,19 @@ export default function ProductList() {
     );
   } else
     return (
-      <TableContainer component={Paper}>
+      <TableContainer component={"div"}>
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              window.location.href = "/CreateProduct";
+            }}
+          >
+            <AddBoxIcon></AddBoxIcon>
+            <Typography color="textSecondary">新增商品</Typography>
+          </Button>
+        </div>
         {console.log(products.length)}
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
