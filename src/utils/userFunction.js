@@ -13,7 +13,7 @@ async function getUserProducts(uid) {
     .doc(uid)
     .get()
     .then((data) => {
-      const product = data.data().products;
+      const product = data?.data()?.products;
       if (!product) {
         return;
       }

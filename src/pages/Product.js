@@ -303,10 +303,11 @@ function Product() {
       .then(
         //城市清單
         countyList().then((list) => {
+          console.log(list);
           setRegion(list);
         })
+        .then(setIsBusy(false))
       )
-      .then(setIsBusy(false));
   }, []);
 
   useEffect(() => {

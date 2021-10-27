@@ -34,15 +34,15 @@ function ShoppingCart() {
     //讀取購物車
     getShoppingCart(uid)
       .then((res) => {
-        var data = res.data();
+        var data = res?.data();
         console.log(data);
-        setCart(data.shoppingCart);
+        setCart(data?.shoppingCart);
 
         //排入預定日期
         setDates((old) => {
           const _temp = [];
           console.log(old);
-          for (var i = 0; i < data.shoppingCart.length; i++) {
+          for (var i = 0; i < data?.shoppingCart?.length; i++) {
             var start = new Date(null);
             //firebase秒數換算成日期
             start.setTime(data.shoppingCart[i].startDate?.seconds * 1000);
