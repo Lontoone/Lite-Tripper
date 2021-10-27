@@ -52,14 +52,14 @@ export default function ProductList() {
         _datas.push(res[i].data());
         console.log(res[i].data());
       }*/
-      setProducts(res);
+      if (res) setProducts(res);
       setisBusy(false);
     });
   }, []);
 
   if (isBusy) {
     return <></>;
-  } else if (products.length == 0) {
+  } else if (products?.length == 0) {
     return (
       <div>
         <Button

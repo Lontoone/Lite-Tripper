@@ -152,10 +152,10 @@ function createOrder(pid, orderData, productData) {
 }
 
 //取得訂單狀況
-async function getOrdersByState(uid, state) {
+async function getOrdersByState(uid,userType, state) {
   return await firestore
     .collection("orders")
-    .where("buyer", "==", uid)
+    .where(userType, "==", uid)
     .where("state", "in", state)
     .get();
 }

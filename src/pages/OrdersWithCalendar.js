@@ -25,7 +25,8 @@ function OrdersWithCalendar({ isSeller, state,showCalendar=true }) {
   useEffect(() => {
     //取得order的文件們
     //getInProgressOrders(auth.currentUser?.uid)
-    getOrdersByState(auth.currentUser?.uid, state)
+    var userType=isSeller?"seller":"buyer";
+    getOrdersByState(auth.currentUser?.uid,userType, state)
       .then((res) => {
         const _orders = [];
         for (var i = 0; i < res.docs.length; i++) {
